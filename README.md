@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/e7eZQuE.png)
 
-##1.UtilsInit
+## 1.UtilsInit
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
 
 `UtilsInit.init(getApplicationContext());`
