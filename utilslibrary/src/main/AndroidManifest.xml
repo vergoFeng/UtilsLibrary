@@ -3,7 +3,7 @@
           package="com.fenghj.android.utilslibrary"
 >
 
-    <application android:allowBackup="true"
+    <application android:allowBackup="false"
                  android:label="@string/app_name"
                  android:supportsRtl="true"
     >
