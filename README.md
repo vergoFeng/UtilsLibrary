@@ -1,4 +1,19 @@
 ![](http://i.imgur.com/e7eZQuE.png)
+## About
+常用工具类集合
+
+## Gradle
+Step 1. 在你的根build.gradle文件中增加JitPack仓库依赖。
+
+    allprojects {
+        repositories {
+            jcenter()
+            maven { url "https://jitpack.io" }
+        }
+    }
+Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
+
+    compile 'com.github.vergoFeng:UtilsLibrary:1.0.0'
 
 ## 1.UtilsInit
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
@@ -83,11 +98,11 @@ App相关工具类
 	@Override
 	public void onCreate() {
 	    super.onCreate();
-	    JLog.Builder builder = new JLog.Builder(this);
+	    JLog.Builder builder = new JLog.Builder();
 	}
 当然，JLog还支持多参数配置，具体如下
 
-	new JLog.Builder(context)
+	new JLog.Builder()
         .setLogSwitch(BuildConfig.DEBUG) //设置log总开关，默认为true
         .setGlobalTag("fhj") //设置log全局标签，默认为null
         					 //当全局标签不为空时，我们输出的log全部为该tag，
