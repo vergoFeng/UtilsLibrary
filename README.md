@@ -124,8 +124,8 @@ Intent意图相关工具类
 
 	AndroidManifest需添加权限，Android6.0以上需要动态申请权限处理
 
-	`<uses-permission android:name="android.permission.CAMERA"/>`
-	`<uses-permission android:name="android.permission.CAMERA"/>`
+		<uses-permission android:name="android.permission.CAMERA"/>
+		<uses-permission android:name="android.permission.CAMERA"/>
 
 ## 7. JLog
 ### 7.1 功能
