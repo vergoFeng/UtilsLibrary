@@ -1,7 +1,13 @@
 package com.fenghj.android.utilslibrary;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.widget.Toast;
+
+import java.io.File;
 
 /**
  * 意图相关工具类
@@ -62,8 +68,36 @@ public class IntentUtils {
      * @param mailAdress 接收邮箱地址
      */
     public static Intent getSendMailIntent(final String mailAdress) {
-        Uri uri = Uri.parse("mailto:"+mailAdress);
+        Uri uri = Uri.parse("mailto:" + mailAdress);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    /**
+     * 获取打开相机拍照的意图（兼容7.0）
+     * <p>需添加权限 :
+     *     <br>{@code <uses-permission android:name="android.permission.CAMERA"/>}</br>
+     *     <br>{@code <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>}</br>
+     * </p>
+     *
+     * @param file 拍照保存图片的文件
+     */
+    public static Intent getCameraIntent(File file) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(UtilsInit.getContext().getPackageManager()) != null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+            } else {
+                //兼容7.0调用相机
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+                Uri uri = UtilsInit.getContext().getContentResolver()
+                        .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            }
+        } else {
+            Toast.makeText(UtilsInit.getContext(), "没有系统相机", Toast.LENGTH_SHORT).show();
+        }
+        return intent;
     }
 }

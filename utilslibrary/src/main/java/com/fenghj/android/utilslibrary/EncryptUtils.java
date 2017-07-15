@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * 加密解密相关的工具类
  * <p>Created by Fenghj on 2017/7/14.</p>
  */
 
