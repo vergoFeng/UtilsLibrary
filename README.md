@@ -1,4 +1,4 @@
-![](http://i.imgur.com/e7eZQuE.png)
+![](http://i.imgur.com/IzybjYi.png)
 ## About
 常用工具类集合
 
@@ -13,7 +13,7 @@ Step 1. 在你的根build.gradle文件中增加JitPack仓库依赖。
     }
 Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
 
-    compile 'com.github.vergoFeng:UtilsLibrary:1.0.0'
+    compile 'com.github.vergoFeng:UtilsLibrary:1.0'
 
 ## 1. UtilsInit
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
@@ -124,8 +124,8 @@ Intent意图相关工具类
 
 	AndroidManifest需添加权限，Android6.0以上需要动态申请权限处理
 
-	`<uses-permission android:name="android.permission.CAMERA"/>`
-	`<uses-permission android:name="android.permission.CAMERA"/>`
+        <uses-permission android:name="android.permission.CAMERA"/>
+        <uses-permission android:name="android.permission.CAMERA"/>
 
 ## 7. JLog
 ### 7.1 功能
@@ -237,9 +237,36 @@ targetSdkVersion >= 23，需要动态申请改权限。
 
 ![](http://i.imgur.com/J6Sa9yQ.png)
 
-## 11. SPUtils
+## 11. SDCardUtils
+SD卡相关工具类
+### 11.1 功能及使用
+* 判断SD卡是否可用：`isSDCardEnable()`
+
+    `boolean isSDCardEnable = SDCardUtils.isSDCardEnable();`
+
+* 获取应用专属缓存目录
+
+        File cacheFile = SDCardUtils.getCacheDirectory(Environment.DIRECTORY_DOWNLOADS);
+        String cachePath = SDCardUtils.getCachePath(Environment.DIRECTORY_DOWNLOADS);
+
+    方法参数：
+
+        Environment.DIRECTORY_MUSIC
+        Environment.DIRECTORY_PODCASTS
+        Environment.DIRECTORY_RINGTONES
+        Environment.DIRECTORY_ALARMS
+        Environment.DIRECTORY_NOTIFICATIONS
+        Environment.DIRECTORY_PICTURES
+        Environment.DIRECTORY_MOVIES
+
+* 获取SD卡的根目录
+
+        File storageFile = SDCardUtils.getStorageDirectory();
+        String storagePath = SDCardUtils.getStoragePath();
+
+## 12. SPUtils
 SharedPreferences相关工具类
-### 11.1 功能
+### 12.1 功能
 * 保存数据
 * 链式调用一次保存多条数据
 * 读取数据
@@ -247,7 +274,7 @@ SharedPreferences相关工具类
 * 移除某个键对应的数据
 * 清除所有数据
 
-### 11.2 使用
+### 12.2 使用
 * 获取SPUtils对象
 
 		//默认SharedPreferences文件名，"jmportal_sp".
@@ -294,9 +321,48 @@ SharedPreferences相关工具类
 
 	`SPUtils.init().clear();`
 
-## 12. TimeUtils
+## 13. StringUtils
+字符串相关工具类
+### 13.1 功能
+* 判断字符串空
+* 正则相关判断
+* 判断字符串是否是Emoji表情
+### 13.2 使用
+* 判断字符串是否为null或长度为0：`isEmpty(CharSequence s)`
+
+    `boolean isEmpty = StringUtils.isEmpty(str);`
+
+* 判断字符串是否为null或全为空格：`isTrimEmpty(CharSequence s)`
+
+    `boolean isTrimEmpty = StringUtils.isTrimEmpty(str);`
+
+* 判断字符串是否为null或全为空白字符：`isSpace(CharSequence s)`
+
+    `boolean isSpace = StringUtils.isSpace(str);`
+
+* 验证手机号（简单）：`isMobileSimple(CharSequence s)`
+
+    `boolean isMobileSimple = StringUtils.isMobileSimple(str);`
+
+* 验证手机号（精确）：`isMobileExact(CharSequence s)`
+
+    `boolean isMobileExact = StringUtils.isMobileExact(str);`
+
+* 验证身份证号码（18位）：`isIDCard(CharSequence s)`
+
+    `boolean isIDCard = StringUtils.isIDCard(str);`
+
+* 验证邮箱：`isEmail(CharSequence s)`
+
+    `boolean isEmail = StringUtils.isEmail(str);`
+
+* 判断输入是否是表情：`containsEmoji(CharSequence s)`
+
+    `boolean isEmoji = StringUtils.containsEmoji(str);`
+
+## 14. TimeUtils
 时间相关工具类
-### 12.1 功能
+### 14.1 功能
 
 | 方法名 | 功能 |
 | ----- |:----:|
@@ -308,7 +374,7 @@ SharedPreferences相关工具类
 | stringToLong(String strTime) | string类型转换为long类型 |
 | dateToLong(Date date)   | date类型转换为long类型 |
 
-### 12.2 使用
+### 14.2 使用
 string类型转换
 	
 	//strTime的时间格式必须是yyyy-MM-dd HH:mm:ss
