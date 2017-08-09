@@ -13,7 +13,7 @@ Step 1. 在你的根build.gradle文件中增加JitPack仓库依赖。
     }
 Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
 
-    compile 'com.github.vergoFeng:UtilsLibrary:1.0'
+    compile 'com.github.vergoFeng:UtilsLibrary:1.0.3'
 
 ## 1. UtilsInit
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
@@ -49,6 +49,26 @@ App相关工具类
 * MD5加密（16进制密文字符串）
 
 	`encryptMD5ToString(String data)`
+
+* AES加密解密
+
+    加密解密模式为CBC，key为秘钥，iv为向量，结果返回String类型
+
+    * 加密后转为Base64编码
+
+        `encryptAES2Base64(String data, String key, String iv)`
+
+    * 加密后转为16进制
+
+        `encryptAES2HexString(String data, String key, String iv)`
+
+    * 解密Base64编码密文
+
+        `decryptBase64AES(String data, String key, String iv)`
+
+    * 解密16进制密文
+
+        `decryptHexStringAES(String data, String key, String iv)`
 
 ## 5. InputMethodUtils
 键盘相关工具类

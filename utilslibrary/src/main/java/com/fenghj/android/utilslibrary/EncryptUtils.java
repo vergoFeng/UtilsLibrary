@@ -56,6 +56,7 @@ public class EncryptUtils {
      *
      * @param data 明文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return String Base64加密后
      */
     public static String encryptAES2Base64(final String data, final String key, final String iv) {
@@ -67,6 +68,7 @@ public class EncryptUtils {
      *
      * @param data 明文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return 16进制密文
      */
     public static String encryptAES2HexString(final String data, final String key, final String iv) {
@@ -78,6 +80,7 @@ public class EncryptUtils {
      *
      * @param data 明文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return 密文
      */
     public static byte[] encryptAES(final String data, final String key, final String iv) {
@@ -89,6 +92,7 @@ public class EncryptUtils {
      *
      * @param data Base64编码密文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return 明文
      */
     public static String decryptBase64AES(final String data, final String key, final String iv) {
@@ -100,6 +104,7 @@ public class EncryptUtils {
      *
      * @param data 16进制密文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return 明文
      */
     public static String decryptHexStringAES(final String data, final String key, final String iv) {
@@ -111,6 +116,7 @@ public class EncryptUtils {
      *
      * @param data 密文
      * @param key  16、24、32字节秘钥
+     * @param iv   向量
      * @return 明文
      */
     public static byte[] decryptAES(final byte[] data, final String key, final String iv) {
