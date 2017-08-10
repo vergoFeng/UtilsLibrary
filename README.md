@@ -13,7 +13,7 @@ Step 1. 在你的根build.gradle文件中增加JitPack仓库依赖。
     }
 Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
 
-    compile 'com.github.vergoFeng:UtilsLibrary:1.0.3'
+    compile 'com.github.vergoFeng:UtilsLibrary:1.0.4'
 
 ## 初始化
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
