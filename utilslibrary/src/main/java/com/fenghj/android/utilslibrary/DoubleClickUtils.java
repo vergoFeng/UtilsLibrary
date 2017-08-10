@@ -14,7 +14,7 @@ public class DoubleClickUtils {
     /**
      * 判断是否快速点击多次，双击
      *
-     * @return true or false
+     * @return {@code true}: 双击<br>{@code false}: 单击
      */
     public static boolean isDoubleClick() {
         return isDoubleClick(500);
@@ -22,8 +22,8 @@ public class DoubleClickUtils {
 
     /**
      * 判断是否快速点击多次，双击
-     * @param doubleTime  自定义快速点击的时间间隔，单位ms
-     * @return true or false
+     * @param doubleTime  自定义判断双击的时间间隔，单位ms
+     * @return {@code true}: 双击<br>{@code false}: 单击
      */
     public static boolean isDoubleClick(int doubleTime) {
         long currentTime = System.currentTimeMillis();

@@ -15,7 +15,7 @@ Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
 
     compile 'com.github.vergoFeng:UtilsLibrary:1.0.3'
 
-## 1. UtilsInit
+## 初始化
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
 
 `UtilsInit.init(getApplicationContext());`
@@ -24,14 +24,41 @@ Step 2. 在你的model的build.gradle文件中增加LUtilsLibrary依赖。
 
 `UtilsInit.getContext();`
 
-## 2. AppUtils
+## 1. AppUtils
 App相关工具类
-### 2.1 功能
+### 1.1 功能
 | 方法名 | 功能 |
 | ----- |:----:|
 | getAppPackageName() | 获取App包名 |
 | isInstallApp(String packageName) | 判断App是否安装 |
 | launchApp(String packageName) | 打开App |
+
+## 2. BitmapUtils
+图片Bitmap相关工具类
+### 2.1 功能
+* bitmap转byte[]
+
+	    byte[] bitmap2Bytes(Bitmap bitmap, CompressFormat format)
+
+* 获取Bitmap
+
+	    Bitmap getBitmap(String filePath, int maxWidth, int maxHeight)
+
+* 保存图片
+
+		save(Bitmap src, String filePath, CompressFormat format)
+		save(Bitmap src, File file, CompressFormat format)
+		save(Bitmap src, String filePath, CompressFormat format, boolean recycle)
+		/**
+	     * 保存图片
+	     *
+	     * @param src     源图片
+	     * @param file    要保存到的文件
+	     * @param format  格式
+	     * @param recycle 是否回收
+	     * @return {@code true}: 成功<br>{@code false}: 失败
+	     */
+		save(Bitmap src, File file, CompressFormat format, boolean recycle)
 
 ## 3. DensityUtils
 尺寸相关工具类
@@ -43,9 +70,23 @@ App相关工具类
 | sp2px(float spValue) | sp转px |
 | px2sp(float pxValue) | px转sp |
 
-## 4. EncryptUtils
-加密解密相关的工具类
+## 4. DoubleClickUtils
+判断双击工具类
 ### 4.1 功能
+
+	//默认时间间隔500ms
+	boolean isDoubleClick()
+
+	/**
+     * 判断是否双击
+     * @param doubleTime  自定义判断双击的时间间隔，单位ms
+     * @return {@code true}: 成功<br>{@code false}: 失败
+     */
+    boolean isDoubleClick(int doubleTime) {
+
+## 5. EncryptUtils
+加密解密相关的工具类
+### 5.1 功能
 * MD5加密（16进制密文字符串）
 
 	`encryptMD5ToString(String data)`
@@ -70,13 +111,64 @@ App相关工具类
 
         `decryptHexStringAES(String data, String key, String iv)`
 
-## 5. InputMethodUtils
+## 6. FileUtils
+文件相关工具类
+### 6.1 功能
+* 根据文件路劲获取文件
+* 判断文件是否存在
+* 判断目录是否存在
+* 获取目录大小
+* 获取文件大小
+* 复制文件
+* 删除目录
+* 删除文件
+### 6.2 使用
+* 根据文件路劲获取文件
+	
+	    getFileByPath(String filePath)
+
+* 判断文件是否存在
+	
+		isFileExists(String filePath)
+		isFileExists(File file)
+		createOrExistsFile(File file)
+
+* 判断目录是否存在
+	
+	    createOrExistsDir(File file)
+
+* 获取目录大小
+
+		getDirLength(String filePath)
+		getDirLength(File file)
+
+* 获取文件大小
+
+		getFileLength(String filePath)
+		getFileLength(File file)
+
+* 复制文件
+
+		copyFile(String srcFilePath, String destFilePath)
+		copyFile(File srcFile, File destFile)
+
+* 删除目录
+
+		deleteDir(String dirPath)
+		deleteDir(File dir)
+
+* 删除文件
+
+		deleteFile(String srcFilePath)
+		deleteFile(File dir)
+
+## 7. InputMethodUtils
 键盘相关工具类
-### 5.1 功能
+### 7.1 功能
 * 动态显示键盘
 * 动态隐藏键盘
 * 触摸空白区域隐藏键盘
-### 5.2 使用
+### 7.2 使用
 * 显示
 
 		showSoftInput(Activity activity)
@@ -108,14 +200,14 @@ App相关工具类
 	        return super.dispatchTouchEvent(ev);
 	    }
 
-## 6. IntentUtils
+## 8. IntentUtils
 Intent意图相关工具类
-### 6.1 功能
+### 8.1 功能
 * 电话相关意图
 * 短信相关意图
 * 邮件相关意图
 * 相机相关意图，兼容了Android7.0
-### 6.2 使用
+### 8.2 使用
 * 获取跳至拨号界面意图
 
 	`getDialIntent(String phoneNumber)`
@@ -147,8 +239,8 @@ Intent意图相关工具类
 		<uses-permission android:name="android.permission.CAMERA"/>
 		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-## 7. JLog
-### 7.1 功能
+## 9. JLog
+### 9.1 功能
 * 可设置Log开启和关闭
 * 可设置Log全局Tag，全局Tag为空时Tag为当前类名
 * 可设置Log是否显示头部信息
@@ -158,8 +250,8 @@ Intent意图相关工具类
 * 支持多参数输出
 * 支持JSON串的输出
 * 支持XML串的输出
-### 7.2 使用
-#### 7.2.1 初始化
+### 9.2 使用
+#### 9.2.1 初始化
 在Application的onCreate()中进行初始化
 
 	@Override
@@ -177,7 +269,7 @@ Intent意图相关工具类
         .setLogHeadSwitch(true)	//设置log头信息开关，默认为true
         .setBorderSwitch(true)	//输出日志是否带边框开关，默认true
 
-#### 7.2.2 使用示例
+#### 9.2.2 使用示例
 * 基础用法：`JLog.d("initView");`
 
 	![](http://i.imgur.com/LPf8ume.png)
@@ -210,38 +302,38 @@ Intent意图相关工具类
 	        log(JSON | type, tag, contents);
 	    }
 
-## 8. NetworkUtils
+## 10. NetworkUtils
 网络相关工具类
-### 8.1 功能
+### 10.1 功能
 | 方法名 | 功能 |
 | ----- |:----:|
 | isConnected()     | 判断网络是否连接 |
 | isWifiConnected() | 判断wifi是否连接状态 |
 | getNetworkType()  | 获取当前网络类型 |
 
-### 8.2 使用
+### 10.2 使用
 需要在AndroidManifest中添加权限
 
 `<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>`
 
-## 9. PhoneUtils
+## 11. PhoneUtils
 手机相关工具类
-### 9.1 功能
+### 11.1 功能
 | 方法名 | 功能 |
 | ----- |:----:|
 | getPhoneIMEI()       | 获取手机IMEI码 |
 | getSimOperatorCode() | 获取Sim卡运营商名称code值 |
 
-### 9.2 使用
+### 11.2 使用
 需要在AndroidManifest中添加权限
 
 `<uses-permission android:name="android.permission.READ_PHONE_STATE"/>`
 
 targetSdkVersion >= 23，需要动态申请改权限。
 
-## 10. ScreenUtils
+## 12. ScreenUtils
 屏幕相关工具类
-### 10.1 功能
+### 12.1 功能
 
 | 方法名 | 功能 |
 | ----- |:----:|
@@ -249,20 +341,12 @@ targetSdkVersion >= 23，需要动态申请改权限。
 | getScreenHeight()    | 获取屏幕的高度 |
 | getStatusBarHeight() | 获取状态栏高度 |
 
-### 10.2 使用
-
-	int width = ScreenUtils.getScreenWidth();
-	int height = ScreenUtils.getScreenHeight();
-	JLog.d("屏幕宽度：高度" + width + "：" + height);
-
-![](http://i.imgur.com/J6Sa9yQ.png)
-
-## 11. SDCardUtils
+## 13. SDCardUtils
 SD卡相关工具类
-### 11.1 功能及使用
-* 判断SD卡是否可用：`isSDCardEnable()`
+### 13.1 功能及使用
+* 判断SD卡是否可用：
 
-    `boolean isSDCardEnable = SDCardUtils.isSDCardEnable();`
+        isSDCardEnable()
 
 * 获取应用专属缓存目录
 
@@ -284,9 +368,9 @@ SD卡相关工具类
         File storageFile = SDCardUtils.getStorageDirectory();
         String storagePath = SDCardUtils.getStoragePath();
 
-## 12. SPUtils
+## 14. SPUtils
 SharedPreferences相关工具类
-### 12.1 功能
+### 14.1 功能
 * 保存数据
 * 链式调用一次保存多条数据
 * 读取数据
@@ -294,7 +378,7 @@ SharedPreferences相关工具类
 * 移除某个键对应的数据
 * 清除所有数据
 
-### 12.2 使用
+### 14.2 使用
 * 获取SPUtils对象
 
 		//默认SharedPreferences文件名，"jmportal_sp".
@@ -339,50 +423,50 @@ SharedPreferences相关工具类
 
 * 清除所有数据
 
-	`SPUtils.init().clear();`
+	    SPUtils.init().clear();
 
-## 13. StringUtils
+## 15. StringUtils
 字符串相关工具类
-### 13.1 功能
+### 15.1 功能
 * 判断字符串空
 * 正则相关判断
 * 判断字符串是否是Emoji表情
-### 13.2 使用
-* 判断字符串是否为null或长度为0：`isEmpty(CharSequence s)`
+### 15.2 使用
+* 判断字符串是否为null或长度为0
 
-    `boolean isEmpty = StringUtils.isEmpty(str);`
+    `isEmpty(CharSequence s)`
 
-* 判断字符串是否为null或全为空格：`isTrimEmpty(CharSequence s)`
+* 判断字符串是否为null或全为空格
 
-    `boolean isTrimEmpty = StringUtils.isTrimEmpty(str);`
+    `isTrimEmpty(CharSequence s)`
 
-* 判断字符串是否为null或全为空白字符：`isSpace(CharSequence s)`
+* 判断字符串是否为null或全为空白字符
 
-    `boolean isSpace = StringUtils.isSpace(str);`
+    `isSpace(CharSequence s)`
 
-* 验证手机号（简单）：`isMobileSimple(CharSequence s)`
+* 验证手机号（简单）
 
-    `boolean isMobileSimple = StringUtils.isMobileSimple(str);`
+    `isMobileSimple(CharSequence s)`
 
-* 验证手机号（精确）：`isMobileExact(CharSequence s)`
+* 验证手机号（精确）：
 
-    `boolean isMobileExact = StringUtils.isMobileExact(str);`
+    `isMobileExact(CharSequence s)`
 
-* 验证身份证号码（18位）：`isIDCard(CharSequence s)`
+* 验证身份证号码（18位）：
 
-    `boolean isIDCard = StringUtils.isIDCard(str);`
+    `isIDCard(CharSequence s)`
 
-* 验证邮箱：`isEmail(CharSequence s)`
+* 验证邮箱：
 
-    `boolean isEmail = StringUtils.isEmail(str);`
+    `isEmail(CharSequence s)`
 
-* 判断输入是否是表情：`containsEmoji(CharSequence s)`
+* 判断输入是否是表情：
 
-    `boolean isEmoji = StringUtils.containsEmoji(str);`
+    `containsEmoji(CharSequence s)`
 
-## 14. TimeUtils
+## 16. TimeUtils
 时间相关工具类
-### 14.1 功能
+### 16.1 功能
 
 | 方法名 | 功能 |
 | ----- |:----:|
@@ -394,7 +478,7 @@ SharedPreferences相关工具类
 | stringToLong(String strTime) | string类型转换为long类型 |
 | dateToLong(Date date)   | date类型转换为long类型 |
 
-### 14.2 使用
+### 16.2 使用
 string类型转换
 	
 	//strTime的时间格式必须是yyyy-MM-dd HH:mm:ss

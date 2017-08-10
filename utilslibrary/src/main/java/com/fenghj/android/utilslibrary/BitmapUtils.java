@@ -11,6 +11,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * 图片Bitmap相关工具类
+ * <p>Created by Fenghj on 2017/8/10.</p>
+ */
+
 public class BitmapUtils {
 
     private BitmapUtils() {
@@ -18,7 +23,7 @@ public class BitmapUtils {
     }
 
     /**
-     * bitmap转byteArr
+     * bitmap转byte[]
      *
      * @param bitmap bitmap对象
      * @param format 格式
