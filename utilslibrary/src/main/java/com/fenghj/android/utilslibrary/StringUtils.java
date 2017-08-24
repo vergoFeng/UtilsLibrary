@@ -123,15 +123,56 @@ public class StringUtils {
     }
 
     /**
+     * 判断该字符串是否为中文
+     */
+    public static boolean containsChinese(String s) {
+        if(s == null || "".equals(s)) return false;
+        for (int i = 0; i < s.length(); i++) {
+            int n = (int) s.charAt(i);
+            if (!(19968 <= n && n < 40869)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * 判断输入是否是表情
      */
     public static boolean containsEmoji(final CharSequence s) {
         if (isEmpty(s)) return false;
         int len = s.length();
         for (int i = 0; i < len; i++) {
-            char codePoint = s.charAt(i);
-            if (isEmojiCharacter(codePoint)) {
-                return true;
+            char hs = s.charAt(i);
+            if (0xd800 <= hs && hs <= 0xdbff) {
+                if (s.length() > 1) {
+                    char ls = s.charAt(i + 1);
+                    int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
+                    if (0x1d000 <= uc && uc <= 0x1f77f) {
+                        return true;
+                    }
+                }
+            } else {
+                // non surrogate
+                if (0x2100 <= hs && hs <= 0x27ff && hs != 0x263b) {
+                    return true;
+                } else if (0x2B05 <= hs && hs <= 0x2b07) {
+                    return true;
+                } else if (0x2934 <= hs && hs <= 0x2935) {
+                    return true;
+                } else if (0x3297 <= hs && hs <= 0x3299) {
+                    return true;
+                } else if (hs == 0xa9 || hs == 0xae || hs == 0x303d
+                        || hs == 0x3030 || hs == 0x2b55 || hs == 0x2b1c
+                        || hs == 0x2b1b || hs == 0x2b50 || hs == 0x231a) {
+                    return true;
+                }
+                if (s.length() > 1 && i < s.length() - 1) {
+                    char ls = s.charAt(i + 1);
+                    if (ls == 0x20e3) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

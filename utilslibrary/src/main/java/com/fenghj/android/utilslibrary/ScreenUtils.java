@@ -38,22 +38,4 @@ public class ScreenUtils {
         windowManager.getDefaultDisplay().getMetrics(dm);// 给白纸设置宽高
         return dm.heightPixels;
     }
-
-    /**
-     * 获取状态栏高度
-     * @return int 状态栏高度px
-     */
-    public static int getStatusBarHeight() {
-        int statusHeight = -1;
-        try {
-            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
-            Object object = clazz.newInstance();
-            int height = Integer.parseInt(clazz.getField("status_bar_height")
-                    .get(object).toString());
-            statusHeight = UtilsInit.getContext().getResources().getDimensionPixelSize(height);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return statusHeight;
-    }
 }

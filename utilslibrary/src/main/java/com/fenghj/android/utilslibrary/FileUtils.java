@@ -97,7 +97,7 @@ public class FileUtils {
      * @return 目录长度
      */
     public static long getDirLength(final File dir) {
-        if (!isFileExists(dir) && !dir.isDirectory()) return -1;
+        if (!isFileExists(dir) || !dir.isDirectory()) return -1;
         long len = 0;
         File[] files = dir.listFiles();
         if (files != null && files.length != 0) {
