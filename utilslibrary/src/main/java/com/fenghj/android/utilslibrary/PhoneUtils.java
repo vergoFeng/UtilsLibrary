@@ -17,11 +17,11 @@ public class PhoneUtils {
      * 获取手机IMEI码
      * <p>需添加权限 {@code <uses-permission android:name="android.permission.READ_PHONE_STATE"/>}</p>
      */
-    @SuppressLint("HardwareIds")
+    @SuppressLint({"HardwareIds", "MissingPermission"})
     public static String getPhoneIMEI() {
         TelephonyManager tm = (TelephonyManager) UtilsInit.getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getDeviceId();
+        return tm != null ? tm.getDeviceId() : null;
     }
 
     /**

@@ -13,7 +13,7 @@ Step 1. 在build.gradle(Project:XXX)文件中增加JitPack仓库依赖。
     }
 Step 2. 在build.gradle(Module:XXX)文件中增加LUtilsLibrary依赖。
 
-    compile 'com.github.vergoFeng:UtilsLibrary:1.1.0'
+    compile 'com.github.vergoFeng:UtilsLibrary:1.1.1'
 
 ## How to use
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
@@ -86,7 +86,7 @@ decryptHexStringAES  : 解密16进制密文
 * #### 文件相关：FileUtils
 
 ```
-getFileByPath      : 根据文件路劲获取文件
+getFileByPath      : 根据文件路径获取文件
 createOrExistsDir  : 判断目录是否存在，不存在则判断是否创建成功
 createOrExistsFile : 判断文件是否存在，不存在则判断是否创建成功
 isFileExists       : 判断文件是否存在
@@ -122,14 +122,20 @@ setLogSwitch     : 设置log总开关，默认为true
 setGlobalTag     : 设置log全局标签
 setLogHeadSwitch : 设置log头信息开关
 setBorderSwitch  : 设置输出日志是否带边框开关
-v                : Verbose日志
-d                : Debug日志
-i                : Info日志
-w                : Warn日志
-e                : Error日志
-a                : Assert日志
+setStackDeep     : 设置log栈深度，默认为1
+v                : tag为全局的Verbose日志
+vTag             : 自定义tag的Verbose日志
+d                : tag为全局的Debug日志
+dTag             : 自定义tag的Debug日志
+i                : tag为全局的Info日志
+iTag             : 自定义tag的Info日志
+w                : tag为全局的Warn日志
+wTag             : 自定义tag的Warn日志
+e                : tag为全局的Error日志
+eTag             : 自定义tag的Error日志
+a                : tag为全局的Assert日志
+aTag             : 自定义tag的Assert日志
 json             : log字符串之json
-xml              : log字符串之xml
 ```
 
 * #### 网络相关：NetworkUtils
@@ -197,7 +203,7 @@ clear      : SP中清除所有数据
 
 ```
 isEmpty         : 判断字符串是否为null或长度为0
-isTrimEmpty     : 判断字符串是否为null或全为空格
+isTrimEmpty     : 判断字符串是否为null或全为空格（v1.1.1版本已废弃）
 isSpace         : 判断字符串是否为null或全为空白字符
 isMobileSimple  : 验证手机号（简单）
 isMobileSimple  : 验证手机号（精确）

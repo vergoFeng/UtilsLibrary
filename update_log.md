@@ -1,3 +1,12 @@
+* 17/11/08
+
+    * TimeUtils：修复formatDate1方法，获取与当前时间差方法优化
+    * JLog：优化相关功能，新增setStackDeep设置log栈深度，优化LogUtils多参数打印
+    * PhoneUtils：修复getPhoneIMEI空指针异常
+    * StringUtils：废弃isTrimEmpty方法，isEmpty和isSpace增加判断字符串为"null"
+    * 更新README.md
+    * 发布1.1.1版本
+
 * 17/08/24
 
     * 发布1.1.0版本，更新README.md

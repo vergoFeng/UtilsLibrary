@@ -1,28 +1,24 @@
 package com.fenghj.android.utilslibrary;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Formatter;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 /**
- * Android Log Utils
- * <p>Created by Fenghj on 2017/7/1.</p>
+ * <pre>
+ *     author: Blankj
+ *     blog  : http://blankj.com
+ *     time  : 2016/09/21
+ *     desc  : Log相关工具类
+ * </pre>
  */
 public final class JLog {
 
@@ -35,188 +31,172 @@ public final class JLog {
 
     @IntDef({V, D, I, W, E, A})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface TYPE {}
+    private @interface TYPE {
+    }
+
+    private static final char[] T = new char[]{'V', 'D', 'I', 'W', 'E', 'A'};
 
     private static final int JSON = 0x10;
-    private static final int XML  = 0x20;
 
-    private static boolean sLogSwitch         = true; // log总开关，默认开
-    private static String  sGlobalTag         = null; // log标签
-    private static boolean sTagIsSpace        = true; // log标签是否为空白
-    private static boolean sLogHeadSwitch     = true; // log头部开关，默认开
-    private static boolean sLogBorderSwitch   = true; // log边框开关，默认开
+    private static boolean sLogSwitch         = true;  // log总开关，默认开
+    private static String  sGlobalTag         = null;  // log标签
+    private static boolean sTagIsSpace        = true;  // log标签是否为空白
+    private static boolean sLogHeadSwitch     = true;  // log头部开关，默认开
+    private static boolean sLogBorderSwitch   = true;  // log边框开关，默认开
+    //    private static int     sConsoleFilter     = V;     // log控制台过滤器
+    private static int     sStackDeep         = 1;     // log栈深度
 
     private static final String LINE_SEP      = System.getProperty("line.separator");
     private static final String TOP_BORDER    = "╔═══════════════════════════════════════════════════════════════════════════════════════════════════";
+    private static final String SPLIT_BORDER  = "╠───────────────────────────────────────────────────────────────────────────────────────────────────";
     private static final String LEFT_BORDER   = "║ ";
     private static final String BOTTOM_BORDER = "╚═══════════════════════════════════════════════════════════════════════════════════════════════════";
     private static final int    MAX_LEN       = 4000;
-
-    private static final String NULL_TIPS = "Log with null object.";
-    private static final String NULL      = "null";
-    private static final String ARGS      = "args";
+    private static final String NULL          = "null";
+    private static final String ARGS          = "args";
 
     private JLog() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    public static class Builder {
-
-        public Builder setLogSwitch(boolean logSwitch) {
-            sLogSwitch = logSwitch;
-            return this;
-        }
-
-        public Builder setGlobalTag(final String tag) {
-            if (isSpace(tag)) {
-                sGlobalTag = "";
-                sTagIsSpace = true;
-            } else {
-                sGlobalTag = tag;
-                sTagIsSpace = false;
-            }
-            return this;
-        }
-
-        public Builder setLogHeadSwitch(boolean logHeadSwitch) {
-            sLogHeadSwitch = logHeadSwitch;
-            return this;
-        }
-
-        public Builder setBorderSwitch(boolean borderSwitch) {
-            sLogBorderSwitch = borderSwitch;
-            return this;
-        }
-    }
-
-    public static void v(Object contents) {
+    public static void v(final Object... contents) {
         log(V, sGlobalTag, contents);
     }
 
-    public static void v(String tag, Object... contents) {
+    public static void vTag(final String tag, final Object... contents) {
         log(V, tag, contents);
     }
 
-    public static void d(Object contents) {
+    public static void d(final Object... contents) {
         log(D, sGlobalTag, contents);
     }
 
-    public static void d(String tag, Object... contents) {
+    public static void dTag(final String tag, final Object... contents) {
         log(D, tag, contents);
     }
 
-    public static void i(Object contents) {
+    public static void i(final Object... contents) {
         log(I, sGlobalTag, contents);
     }
 
-    public static void i(String tag, Object... contents) {
+    public static void iTag(final String tag, final Object... contents) {
         log(I, tag, contents);
     }
 
-    public static void w(Object contents) {
+    public static void w(final Object... contents) {
         log(W, sGlobalTag, contents);
     }
 
-    public static void w(String tag, Object... contents) {
+    public static void wTag(final String tag, final Object... contents) {
         log(W, tag, contents);
     }
 
-    public static void e(Object contents) {
+    public static void e(final Object... contents) {
         log(E, sGlobalTag, contents);
     }
 
-    public static void e(String tag, Object... contents) {
+    public static void eTag(final String tag, final Object... contents) {
         log(E, tag, contents);
     }
 
-    public static void a(Object contents) {
+    public static void a(final Object... contents) {
         log(A, sGlobalTag, contents);
     }
 
-    public static void a(String tag, Object... contents) {
+    public static void aTag(final String tag, final Object... contents) {
         log(A, tag, contents);
     }
 
-    public static void json(String contents) {
-        log(JSON | D, sGlobalTag, contents);
+    public static void json(final String content) {
+        log(JSON | D, sGlobalTag, content);
     }
 
-    public static void json(@TYPE int type, String contents) {
-        log(JSON | type, sGlobalTag, contents);
+    public static void json(@TYPE final int type, final String content) {
+        log(JSON | type, sGlobalTag, content);
     }
 
-    public static void json(String tag, String contents) {
-        log(JSON | D, tag, contents);
+    public static void json(final String tag, final String content) {
+        log(JSON | D, tag, content);
     }
 
-    public static void json(@TYPE int type, String tag, String contents) {
-        log(JSON | type, tag, contents);
+    public static void json(@TYPE final int type, final String tag, final String content) {
+        log(JSON | type, tag, content);
     }
 
-    public static void xml(String contents) {
-        log(XML | D, sGlobalTag, contents);
-    }
-
-    public static void xml(@TYPE int type, String contents) {
-        log(XML | type, sGlobalTag, contents);
-    }
-
-    public static void xml(String tag, String contents) {
-        log(XML | D, tag, contents);
-    }
-
-    public static void xml(@TYPE int type, String tag, String contents) {
-        log(XML | type, tag, contents);
-    }
-
-    private static void log(final int type, String tag, final Object... contents) {
+    private static void log(final int type, final String tag, final Object... contents) {
         if (!sLogSwitch) return;
         int type_low = type & 0x0f, type_high = type & 0xf0;
-        final String[] tagAndHead = processTagAndHead(tag);
+        final TagHead tagHead = processTagAndHead(tag);
         String body = processBody(type_high, contents);
-        print2Console(type_low, tagAndHead[0], tagAndHead[1] + body);
+        print2Console(type_low, tagHead.tag, tagHead.consoleHead, body);
     }
 
-    private static String[] processTagAndHead(String tag) {
+    private static TagHead processTagAndHead(String tag) {
         if (!sTagIsSpace && !sLogHeadSwitch) {
             tag = sGlobalTag;
         } else {
-            StackTraceElement targetElement = Thread.currentThread().getStackTrace()[5];
-            String className = targetElement.getClassName();
-            String[] classNameInfo = className.split("\\.");
-            if (classNameInfo.length > 0) {
-                className = classNameInfo[classNameInfo.length - 1];
+            final StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+            StackTraceElement targetElement = stackTrace[3];
+            String fileName = targetElement.getFileName();
+            String className;
+            if (fileName == null) {// 混淆可能会导致获取为空 加-keepattributes SourceFile,LineNumberTable
+                className = targetElement.getClassName();
+                String[] classNameInfo = className.split("\\.");
+                if (classNameInfo.length > 0) {
+                    className = classNameInfo[classNameInfo.length - 1];
+                }
+                int index = className.indexOf('$');
+                if (index != -1) {
+                    className = className.substring(0, index);
+                }
+                fileName = className + ".java";
+            } else {
+                int index = fileName.indexOf('.');// 混淆可能导致文件名被改变从而找不到"."
+                className = index == -1 ? fileName : fileName.substring(0, index);
             }
-            if (className.contains("$")) {
-                className = className.split("\\$")[0];
-            }
-            if (sTagIsSpace) {
-                tag = isSpace(tag) ? className : tag;
-            }
+            if (sTagIsSpace) tag = isSpace(tag) ? className : tag;
             if (sLogHeadSwitch) {
-                String head = new Formatter()
-                        .format("%s, %s(%s.java:%d)",
-                                Thread.currentThread().getName(),
+                String tName = Thread.currentThread().getName();
+                final String head = new Formatter()
+                        .format("%s, %s(%s:%d)",
+                                tName,
                                 targetElement.getMethodName(),
-                                className,
+                                fileName,
                                 targetElement.getLineNumber())
                         .toString();
-                return new String[]{tag, head + LINE_SEP, " [" + head + "]: "};
+                final String fileHead = " [" + head + "]: ";
+                if (sStackDeep <= 1) {
+                    return new TagHead(tag, new String[]{head}, fileHead);
+                } else {
+                    final String[] consoleHead = new String[Math.min(sStackDeep, stackTrace.length - 3)];
+                    consoleHead[0] = head;
+                    int spaceLen = tName.length() + 2;
+                    String space = new Formatter().format("%" + spaceLen + "s", "").toString();
+                    for (int i = 1, len = consoleHead.length; i < len; ++i) {
+                        targetElement = stackTrace[i + 3];
+                        consoleHead[i] = new Formatter()
+                                .format("%s%s(%s:%d)",
+                                        space,
+                                        targetElement.getMethodName(),
+                                        targetElement.getFileName(),
+                                        targetElement.getLineNumber())
+                                .toString();
+                    }
+                    return new TagHead(tag, consoleHead, fileHead);
+                }
             }
         }
-        return new String[]{tag, "", ": "};
+        return new TagHead(tag, null, ": ");
     }
 
-    private static String processBody(int type, Object... contents) {
-        String body = NULL_TIPS;
+    private static String processBody(final int type, final Object... contents) {
+        String body = NULL;
         if (contents != null) {
             if (contents.length == 1) {
                 Object object = contents[0];
-                body = object == null ? NULL : object.toString();
+                if (object != null) body = object.toString();
                 if (type == JSON) {
                     body = formatJson(body);
-                } else if (type == XML) {
-                    body = formatXml(body);
                 }
             } else {
                 StringBuilder sb = new StringBuilder();
@@ -249,60 +229,58 @@ public final class JLog {
         return json;
     }
 
-    private static String formatXml(String xml) {
-        try {
-            Source xmlInput = new StreamSource(new StringReader(xml));
-            StreamResult xmlOutput = new StreamResult(new StringWriter());
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(xmlInput, xmlOutput);
-            xml = xmlOutput.getWriter().toString().replaceFirst(">", ">" + LINE_SEP);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return xml;
+    private static void print2Console(final int type, final String tag, final String[] head, final String msg) {
+        printBorder(type, tag, true);
+        printHead(type, tag, head);
+        printMsg(type, tag, msg);
+        printBorder(type, tag, false);
     }
 
-    private static void print2Console(final int type, String tag, String msg) {
+    private static void printBorder(final int type, final String tag, boolean isTop) {
         if (sLogBorderSwitch) {
-            print(type, tag, TOP_BORDER);
-            msg = addLeftBorder(msg);
+            Log.println(type, tag, isTop ? TOP_BORDER : BOTTOM_BORDER);
         }
+    }
+
+    private static void printHead(final int type, final String tag, final String[] head) {
+        if (head != null) {
+            for (String aHead : head) {
+                Log.println(type, tag, sLogBorderSwitch ? LEFT_BORDER + aHead : aHead);
+            }
+            if (sLogBorderSwitch) Log.println(type, tag, SPLIT_BORDER);
+        }
+    }
+
+    private static void printMsg(final int type, final String tag, final String msg) {
         int len = msg.length();
         int countOfSub = len / MAX_LEN;
         if (countOfSub > 0) {
-            print(type, tag, msg.substring(0, MAX_LEN));
-            String sub;
-            int index = MAX_LEN;
-            for (int i = 1; i < countOfSub; i++) {
-                sub = msg.substring(index, index + MAX_LEN);
-                print(type, tag, sLogBorderSwitch ? LEFT_BORDER + sub : sub);
+            int index = 0;
+            for (int i = 0; i < countOfSub; i++) {
+                printSubMsg(type, tag, msg.substring(index, index + MAX_LEN));
                 index += MAX_LEN;
             }
-            sub = msg.substring(index, len);
-            print(type, tag, sLogBorderSwitch ? LEFT_BORDER + sub : sub);
+            if (index != len) {
+                printSubMsg(type, tag, msg.substring(index, len));
+            }
         } else {
-            print(type, tag, msg);
+            printSubMsg(type, tag, msg);
         }
-        if (sLogBorderSwitch) print(type, tag, BOTTOM_BORDER);
     }
 
-    private static void print(final int type, final String tag, String msg) {
-        Log.println(type, tag, msg);
-    }
-
-    private static String addLeftBorder(String msg) {
-        if (!sLogBorderSwitch) return msg;
+    private static void printSubMsg(final int type, final String tag, final String msg) {
+        if (!sLogBorderSwitch) {
+            Log.println(type, tag, msg);
+            return;
+        }
         StringBuilder sb = new StringBuilder();
         String[] lines = msg.split(LINE_SEP);
         for (String line : lines) {
-            sb.append(LEFT_BORDER).append(line).append(LINE_SEP);
+            Log.println(type, tag, LEFT_BORDER + line);
         }
-        return sb.toString();
     }
 
-    private static boolean isSpace(String s) {
+    private static boolean isSpace(final String s) {
         if (s == null) return true;
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
@@ -310,5 +288,56 @@ public final class JLog {
             }
         }
         return true;
+    }
+
+    public static class Builder {
+
+        public Builder setLogSwitch(boolean logSwitch) {
+            sLogSwitch = logSwitch;
+            return this;
+        }
+
+        public Builder setGlobalTag(final String tag) {
+            if (isSpace(tag)) {
+                sGlobalTag = "";
+                sTagIsSpace = true;
+            } else {
+                sGlobalTag = tag;
+                sTagIsSpace = false;
+            }
+            return this;
+        }
+
+        public Builder setLogHeadSwitch(boolean logHeadSwitch) {
+            sLogHeadSwitch = logHeadSwitch;
+            return this;
+        }
+
+        public Builder setBorderSwitch(boolean borderSwitch) {
+            sLogBorderSwitch = borderSwitch;
+            return this;
+        }
+
+//        public Builder setConsoleFilter(@TYPE final int consoleFilter) {
+//            sConsoleFilter = consoleFilter;
+//            return this;
+//        }
+
+        public Builder setStackDeep(@IntRange(from = 1) final int stackDeep) {
+            sStackDeep = stackDeep;
+            return this;
+        }
+    }
+
+    private static class TagHead {
+        String tag;
+        String[] consoleHead;
+        String fileHead;
+
+        TagHead(String tag, String[] consoleHead, String fileHead) {
+            this.tag = tag;
+            this.consoleHead = consoleHead;
+            this.fileHead = fileHead;
+        }
     }
 }

@@ -20,7 +20,7 @@ public class StringUtils {
      * @return {@code true}: 空<br> {@code false}: 不为空
      */
     public static boolean isEmpty(final CharSequence s) {
-        return s == null || s.length() == 0;
+        return s == null || s.length() == 0 || "null".equals(s);
     }
 
     /**
@@ -29,8 +29,9 @@ public class StringUtils {
      * @param s 待校验字符串
      * @return {@code true}: null或全空格<br> {@code false}: 不为null且不全空格
      */
+    @Deprecated
     public static boolean isTrimEmpty(final String s) {
-        return (s == null || s.trim().length() == 0);
+        return (s == null || s.trim().length() == 0 || "null".equals(s.trim()));
     }
 
     /**
@@ -40,7 +41,7 @@ public class StringUtils {
      * @return {@code true}: null或全空白字符<br> {@code false}: 不为null且不全空白字符
      */
     public static boolean isSpace(final String s) {
-        if (s == null) return true;
+        if (s == null || "null".equals(s)) return true;
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
