@@ -39,7 +39,9 @@ public class AppUtils {
      */
     public static void launchApp(String packageName) {
         if (TextUtils.isEmpty(packageName)) return;
-        UtilsInit.getContext().startActivity(getLaunchAppIntent(packageName));
+        Intent intent = getLaunchAppIntent(packageName);
+        if(intent == null) return;
+        UtilsInit.getContext().startActivity(intent);
     }
 
     /**

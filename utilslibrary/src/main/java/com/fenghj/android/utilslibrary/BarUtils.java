@@ -2,12 +2,17 @@ package com.fenghj.android.utilslibrary;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,8 +23,129 @@ import java.lang.reflect.Method;
  */
 
 public class BarUtils {
+    private static final String TAG_COLOR     = "TAG_COLOR";
+    private static final int    TAG_OFFSET    = -123;
+
     private BarUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    /**
+     * 设置状态栏颜色
+     *
+     * @param activity activity
+     * @param color    状态栏颜色值
+     * @param dark     是否把状态栏文字及图标颜色设置为深色
+     */
+    public static void setStatusBarColor(@NonNull final Activity activity, @ColorInt final int color, boolean dark) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        int statusBarColor = color;
+
+        setTranslucentStatus(activity);
+        addMarginTopEqualStatusBarHeight(activity);
+
+        if (dark) {
+            if (OsUtils.isMIUI()) {
+                setStatusBarModeByMIUI(activity, true);
+            } else if (OsUtils.isFlyme()) {
+                setStatusBarModeByFlyme(activity, true);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setStatusBarMode(activity, true);
+            } else {
+                if (statusBarColor == Color.WHITE) {
+                    statusBarColor = 0xffcccccc;
+                }
+            }
+        }
+        addStatusBarColor(activity, statusBarColor);
+    }
+
+    /**
+     * 隐藏状态栏
+     *
+     * @param activity activity
+     * @param dark     是否把状态栏文字及图标颜色设置为深色
+     */
+    public static void hideStatusBar(@NonNull final Activity activity, boolean dark) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        setTranslucentStatus(activity);
+        subtractMarginTopEqualStatusBarHeight(activity);
+        hideColorView(activity);
+        if (dark) {
+            if (OsUtils.isMIUI()) {
+                setStatusBarModeByMIUI(activity, true);
+            } else if (OsUtils.isFlyme()) {
+                setStatusBarModeByFlyme(activity, true);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setStatusBarMode(activity, true);
+            }
+        }
+    }
+
+    private static void addStatusBarColor(final Activity activity, final int color) {
+        ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
+        View fakeStatusBarView = parent.findViewWithTag(TAG_COLOR);
+        if (fakeStatusBarView != null) {
+            if (fakeStatusBarView.getVisibility() == View.GONE) {
+                fakeStatusBarView.setVisibility(View.VISIBLE);
+            }
+            fakeStatusBarView.setBackgroundColor(color);
+        } else {
+            parent.addView(createColorStatusBarView(parent.getContext(), color));
+        }
+    }
+
+    /**
+     * 绘制一个和状态栏一样高的颜色矩形
+     */
+    private static View createColorStatusBarView(final Context context, final int color) {
+        View statusBarView = new View(context);
+        statusBarView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight()));
+        statusBarView.setBackgroundColor(color);
+        statusBarView.setTag(TAG_COLOR);
+        return statusBarView;
+    }
+
+    /**
+     * 为 view 增加 MarginTop 为状态栏高度
+     *
+     * @param activity activity
+     */
+    private static void addMarginTopEqualStatusBarHeight(@NonNull Activity activity) {
+        View view = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+        Object haveSetOffset = view.getTag(TAG_OFFSET);
+        if (haveSetOffset != null && (Boolean) haveSetOffset) return;
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        layoutParams.setMargins(layoutParams.leftMargin,
+                layoutParams.topMargin + getStatusBarHeight(),
+                layoutParams.rightMargin,
+                layoutParams.bottomMargin);
+        view.setTag(TAG_OFFSET, true);
+    }
+
+    /**
+     * 为 view 减少 MarginTop 为状态栏高度
+     *
+     * @param activity activity
+     */
+    private static void subtractMarginTopEqualStatusBarHeight(@NonNull Activity activity) {
+        View view = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+        Object haveSetOffset = view.getTag(TAG_OFFSET);
+        if (haveSetOffset == null || !(Boolean) haveSetOffset) return;
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        layoutParams.setMargins(layoutParams.leftMargin,
+                layoutParams.topMargin - getStatusBarHeight(),
+                layoutParams.rightMargin,
+                layoutParams.bottomMargin);
+        view.setTag(TAG_OFFSET, false);
+    }
+
+    private static void hideColorView(final Activity activity) {
+        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        View fakeStatusBarView = decorView.findViewWithTag(TAG_COLOR);
+        if (fakeStatusBarView == null) return;
+        fakeStatusBarView.setVisibility(View.GONE);
     }
 
     /**

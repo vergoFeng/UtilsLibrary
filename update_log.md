@@ -1,3 +1,12 @@
+* 17/12/13
+
+    * AppUtils：修复launchApp方法空指针问题
+    * BarUtils：新增setStatusBarColor、hideStatusBar方法
+    * BitmapUtils：新增bytes2Bitmap方法
+    * EncryptUtils：修复encryptAES2Base64、decryptBase64AES、decryptHexStringAES方法的空指针问题
+    * 更细README.md
+    * 发布1.1.2版本
+
 * 17/11/08
 
     * TimeUtils：修复formatDate1方法，获取与当前时间差方法优化

@@ -37,6 +37,8 @@ launchApp         : 打开App
 * #### 状态栏相关： BarUtils
 
 ```
+setStatusBarColor       : 设置状态栏颜色
+hideStatusBar           : 隐藏状态栏
 getStatusBarHeight      : 获取状态栏高度
 setFullScreen           : 设置全屏
 setTranslucentStatus    : 设置状态栏透明(api大于19方可使用)
@@ -49,6 +51,7 @@ setStatusBarModeByMIUI  : 设置状态栏字体图标为深色，需要MIUIV6以
 
 ```
 bitmap2Bytes : bitmap转byte[]
+bytes2Bitmap : byte[]转bitmap
 getBitmap    : 获取Bitmap
 save         : 保存图片
 ```

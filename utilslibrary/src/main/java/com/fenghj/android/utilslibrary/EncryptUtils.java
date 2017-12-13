@@ -60,7 +60,9 @@ public class EncryptUtils {
      * @return String Base64加密后
      */
     public static String encryptAES2Base64(final String data, final String key, final String iv) {
-        return Base64.encodeToString(encryptAES(data, key, iv), Base64.DEFAULT);
+        byte[] bytes = encryptAES(data, key, iv);
+        if(bytes != null) return Base64.encodeToString(bytes, Base64.DEFAULT);
+        return null;
     }
 
     /**
@@ -96,6 +98,7 @@ public class EncryptUtils {
      * @return 明文
      */
     public static String decryptBase64AES(final String data, final String key, final String iv) {
+        if(data == null || "".equals(data)) return null;
         return new String(decryptAES(Base64.decode(data, Base64.DEFAULT), key, iv));
     }
 
@@ -108,7 +111,9 @@ public class EncryptUtils {
      * @return 明文
      */
     public static String decryptHexStringAES(final String data, final String key, final String iv) {
-        return new String(decryptAES(hexString2Bytes(data), key, iv));
+        byte[] bytes = decryptAES(hexString2Bytes(data), key, iv);
+        if(bytes == null || bytes.length == 0) return null;
+        return new String(bytes);
     }
 
     /**

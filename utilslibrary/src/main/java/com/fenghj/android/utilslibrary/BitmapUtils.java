@@ -37,6 +37,16 @@ public class BitmapUtils {
     }
 
     /**
+     * byte[]转bitmap
+     *
+     * @param bytes 字节数组
+     * @return bitmap
+     */
+    public static Bitmap bytes2Bitmap(final byte[] bytes) {
+        return (bytes == null || bytes.length == 0) ? null : BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    /**
      * 获取bitmap
      *
      * @param filePath  文件路径
