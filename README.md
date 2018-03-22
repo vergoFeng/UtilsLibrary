@@ -65,7 +65,7 @@ sp2px : sp转px
 px2sp : px转sp
 ```
 
-* #### 尺寸相关：DeviceUtils
+* #### 设备相关：DeviceUtils
 
 ```
 getSDKVersionName : 获取设备系统版本号
