@@ -1,10 +1,20 @@
+* 18/03/22
+
+    * 新增DeviceUtils设备相关工具类
+    * BarUtils：完善setStatusBarColor、hideStatusBar方法，可对view进行沉浸式处理
+    * FileUtils：新增getPathFromUri、getFileFromUri方法，根据Uri获取文件的真实路径
+    * NetworkUtils：新增getIPAddress方法，获取IP地址
+    * StringUtils：完善手机号（精确）的正则表达式
+    * 更新README.md
+    * 发布1.2.0版本
+
 * 17/12/13
 
     * AppUtils：修复launchApp方法空指针问题
     * BarUtils：新增setStatusBarColor、hideStatusBar方法
     * BitmapUtils：新增bytes2Bitmap方法
     * EncryptUtils：修复encryptAES2Base64、decryptBase64AES、decryptHexStringAES方法的空指针问题
-    * 更细README.md
+    * 更新README.md
     * 发布1.1.2版本
 
 * 17/11/08

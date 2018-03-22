@@ -3,6 +3,14 @@ package com.fenghj.android.utilslibrary;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.RequiresPermission;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+import static android.Manifest.permission.INTERNET;
 
 /**
  * 网络相关工具类
@@ -122,5 +130,45 @@ public class NetworkUtils {
             default:
                 return "5";
         }
+    }
+
+    /**
+     * Return the ip address.
+     * <p>Must hold {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
+     *
+     * @param useIPv4 True to use ipv4, false otherwise.
+     * @return the ip address
+     */
+    @RequiresPermission(INTERNET)
+    public static String getIPAddress(final boolean useIPv4) {
+        try {
+            Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+            while (nis.hasMoreElements()) {
+                NetworkInterface ni = nis.nextElement();
+                // To prevent phone of xiaomi return "10.0.2.15"
+                if (!ni.isUp()) continue;
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress inetAddress = addresses.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String hostAddress = inetAddress.getHostAddress();
+                        boolean isIPv4 = hostAddress.indexOf(':') < 0;
+                        if (useIPv4) {
+                            if (isIPv4) return hostAddress;
+                        } else {
+                            if (!isIPv4) {
+                                int index = hostAddress.indexOf('%');
+                                return index < 0
+                                        ? hostAddress.toUpperCase()
+                                        : hostAddress.substring(0, index).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

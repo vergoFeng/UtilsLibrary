@@ -65,6 +65,15 @@ sp2px : sp转px
 px2sp : px转sp
 ```
 
+* #### 尺寸相关：DeviceUtils
+
+```
+getSDKVersionName : 获取设备系统版本号
+getSDKVersionCode : 获取设备系统版本码
+getManufacturer   : 获取设备厂商
+getModel          : 获取设备型号
+```
+
 * #### 判断双击相关：DoubleClickUtils
 
 ```
@@ -98,6 +107,8 @@ getFileLength      : 获取文件大小
 copyFile           : 复制文件
 deleteDir          : 删除目录
 deleteFile         : 删除文件
+getPathFromUri     : 根据Uri获取文件路径
+getFileFromUri     : 根据Uri获取文件对象
 ```
 
 * #### 键盘相关：InputMethodUtils
@@ -147,6 +158,7 @@ json             : log字符串之json
 isConnected     : 判断网络是否连接
 isWifiConnected : 判断wifi是否连接状态
 getNetworkType  : 获取当前网络类型
+getIPAddress    : 获取 IP 地址
 ```
 
 * #### 手机系统相关：OsUtils

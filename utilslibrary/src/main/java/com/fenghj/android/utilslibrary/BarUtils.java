@@ -38,18 +38,30 @@ public class BarUtils {
      * @param dark     是否把状态栏文字及图标颜色设置为深色
      */
     public static void setStatusBarColor(@NonNull final Activity activity, @ColorInt final int color, boolean dark) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        setStatusBarColor(activity, null, color, dark);
+    }
+
+    /**
+     * 设置状态栏颜色
+     *
+     * @param activity  activity
+     * @param viewGroup viewGroup
+     * @param color     状态栏颜色值
+     * @param dark      是否把状态栏文字及图标颜色设置为深色
+     */
+    public static void setStatusBarColor(@NonNull final Activity activity, ViewGroup viewGroup, @ColorInt final int color, boolean dark) {
+        if (Build.VERSION.SDK_INT < 19) return;
         int statusBarColor = color;
 
         setTranslucentStatus(activity);
-        addMarginTopEqualStatusBarHeight(activity);
+        if(viewGroup == null) addMarginTopEqualStatusBarHeight(activity);
 
         if (dark) {
             if (OsUtils.isMIUI()) {
                 setStatusBarModeByMIUI(activity, true);
             } else if (OsUtils.isFlyme()) {
                 setStatusBarModeByFlyme(activity, true);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            } else if (Build.VERSION.SDK_INT >= 23) {
                 setStatusBarMode(activity, true);
             } else {
                 if (statusBarColor == Color.WHITE) {
@@ -57,7 +69,11 @@ public class BarUtils {
                 }
             }
         }
-        addStatusBarColor(activity, statusBarColor);
+        if(viewGroup != null) {
+            addStatusBarColor(viewGroup, statusBarColor);
+        } else {
+            addStatusBarColor(activity, statusBarColor);
+        }
     }
 
     /**
@@ -67,7 +83,7 @@ public class BarUtils {
      * @param dark     是否把状态栏文字及图标颜色设置为深色
      */
     public static void hideStatusBar(@NonNull final Activity activity, boolean dark) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        if (Build.VERSION.SDK_INT < 19) return;
         setTranslucentStatus(activity);
         subtractMarginTopEqualStatusBarHeight(activity);
         hideColorView(activity);
@@ -76,10 +92,14 @@ public class BarUtils {
                 setStatusBarModeByMIUI(activity, true);
             } else if (OsUtils.isFlyme()) {
                 setStatusBarModeByFlyme(activity, true);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            } else if (Build.VERSION.SDK_INT >= 23) {
                 setStatusBarMode(activity, true);
             }
         }
+    }
+
+    private static void addStatusBarColor(final ViewGroup viewGroup, final int color) {
+        viewGroup.addView(createColorStatusBarView(viewGroup.getContext(), color), 0);
     }
 
     private static void addStatusBarColor(final Activity activity, final int color) {
@@ -108,12 +128,21 @@ public class BarUtils {
     }
 
     /**
-     * 为 view 增加 MarginTop 为状态栏高度
+     * 为 activity 增加 MarginTop 为状态栏高度
      *
      * @param activity activity
      */
     private static void addMarginTopEqualStatusBarHeight(@NonNull Activity activity) {
         View view = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+        addMarginTopEqualStatusBarHeight(view);
+    }
+
+    /**
+     * 为 view 增加 MarginTop 为状态栏高度
+     *
+     * @param view view
+     */
+    private static void addMarginTopEqualStatusBarHeight(@NonNull View view) {
         Object haveSetOffset = view.getTag(TAG_OFFSET);
         if (haveSetOffset != null && (Boolean) haveSetOffset) return;
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -125,12 +154,21 @@ public class BarUtils {
     }
 
     /**
-     * 为 view 减少 MarginTop 为状态栏高度
+     * 为 activity 减少 MarginTop 为状态栏高度
      *
      * @param activity activity
      */
     private static void subtractMarginTopEqualStatusBarHeight(@NonNull Activity activity) {
         View view = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+        subtractMarginTopEqualStatusBarHeight(view);
+    }
+
+    /**
+     * 为 view 减少 MarginTop 为状态栏高度
+     *
+     * @param view view
+     */
+    private static void subtractMarginTopEqualStatusBarHeight(@NonNull View view) {
         Object haveSetOffset = view.getTag(TAG_OFFSET);
         if (haveSetOffset == null || !(Boolean) haveSetOffset) return;
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -177,14 +215,14 @@ public class BarUtils {
     @TargetApi(19)
     public static void setTranslucentStatus(Activity activity) {
         // 5.0以上系统状态栏透明
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= 21) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        } else if (Build.VERSION.SDK_INT >= 19) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
@@ -197,7 +235,7 @@ public class BarUtils {
     public static void setStatusBarMode(Activity activity, boolean dark) {
         Window window = activity.getWindow();
         if (window == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (dark) {
                 activity.getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -268,7 +306,7 @@ public class BarUtils {
                 }
                 result = true;
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Build.VERSION.SDK_INT >= 23) {
                     //开发版 7.7.13 及以后版本采用了系统API，旧方法无效但不会报错，所以两个方式都要加上
                     if (dark) {
                         activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

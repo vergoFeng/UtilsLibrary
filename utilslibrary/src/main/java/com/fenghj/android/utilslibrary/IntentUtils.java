@@ -85,7 +85,7 @@ public class IntentUtils {
     public static Intent getCameraIntent(File file) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(UtilsInit.getContext().getPackageManager()) != null) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT < 24) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
             } else {
                 //兼容7.0调用相机
