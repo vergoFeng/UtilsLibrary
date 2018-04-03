@@ -1,3 +1,12 @@
+* 18/04/03
+
+    * BarUtils：优化setStatusBarColor方法
+    * FileUtils：URI转文件路径方法公有化
+    * SPUtils：修改SharedPreferences默认文件名为"utils_sp"
+    * 新增CHM.md帮助文档
+    * 修改README.md中错误
+    * 发布1.2.1版本
+
 * 18/03/22
 
     * 新增DeviceUtils设备相关工具类

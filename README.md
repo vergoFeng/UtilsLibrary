@@ -221,7 +221,7 @@ isEmpty         : 判断字符串是否为null或长度为0
 isTrimEmpty     : 判断字符串是否为null或全为空格（v1.1.1版本已废弃）
 isSpace         : 判断字符串是否为null或全为空白字符
 isMobileSimple  : 验证手机号（简单）
-isMobileSimple  : 验证手机号（精确）
+isMobileExact   : 验证手机号（精确）
 isIDCard        : 验证身份证号码（18位）
 isEmail         : 验证邮箱
 containsChinese : 判断字符串是否包含中文
