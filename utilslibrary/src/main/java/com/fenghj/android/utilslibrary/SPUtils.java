@@ -22,7 +22,7 @@ public class SPUtils {
     private static SharedPreferences.Editor sEditor;
     private static SharedPreferencesCompat.EditorCompat editorCompat = SharedPreferencesCompat.EditorCompat.getInstance();
 
-    private static final String DEFAULT_SP_NAME = "jmportal_sp";
+    private static final String DEFAULT_SP_NAME = "utils_sp";
     private static final int DEFAULT_INT = 0;
     private static final float DEFAULT_FLOAT = 0.0f;
     private static final String DEFAULT_STRING = "";

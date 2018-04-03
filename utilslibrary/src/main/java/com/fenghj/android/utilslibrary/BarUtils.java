@@ -53,21 +53,19 @@ public class BarUtils {
         if (Build.VERSION.SDK_INT < 19) return;
         int statusBarColor = color;
 
+        //设置状态栏透明
         setTranslucentStatus(activity);
         if(viewGroup == null) addMarginTopEqualStatusBarHeight(activity);
 
-        if (dark) {
-            if (OsUtils.isMIUI()) {
-                setStatusBarModeByMIUI(activity, true);
-            } else if (OsUtils.isFlyme()) {
-                setStatusBarModeByFlyme(activity, true);
-            } else if (Build.VERSION.SDK_INT >= 23) {
-                setStatusBarMode(activity, true);
-            } else {
-                if (statusBarColor == Color.WHITE) {
-                    statusBarColor = 0xffcccccc;
-                }
-            }
+        if (OsUtils.isMIUI()) {
+            setStatusBarModeByMIUI(activity, dark);
+        } else if (OsUtils.isFlyme()) {
+            setStatusBarModeByFlyme(activity, dark);
+        } else if (Build.VERSION.SDK_INT >= 23) {
+            setStatusBarMode(activity, dark);
+        }
+        if (statusBarColor == Color.WHITE && Build.VERSION.SDK_INT <= 22) {
+            statusBarColor = 0xffcccccc;
         }
         if(viewGroup != null) {
             addStatusBarColor(viewGroup, statusBarColor);
@@ -87,14 +85,12 @@ public class BarUtils {
         setTranslucentStatus(activity);
         subtractMarginTopEqualStatusBarHeight(activity);
         hideColorView(activity);
-        if (dark) {
-            if (OsUtils.isMIUI()) {
-                setStatusBarModeByMIUI(activity, true);
-            } else if (OsUtils.isFlyme()) {
-                setStatusBarModeByFlyme(activity, true);
-            } else if (Build.VERSION.SDK_INT >= 23) {
-                setStatusBarMode(activity, true);
-            }
+        if (OsUtils.isMIUI()) {
+            setStatusBarModeByMIUI(activity, dark);
+        } else if (OsUtils.isFlyme()) {
+            setStatusBarModeByFlyme(activity, dark);
+        } else if (Build.VERSION.SDK_INT >= 23) {
+            setStatusBarMode(activity, dark);
         }
     }
 
@@ -240,6 +236,8 @@ public class BarUtils {
                 activity.getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             }
         }
     }

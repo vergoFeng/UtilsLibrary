@@ -304,7 +304,7 @@ public class FileUtils {
         return getFileByPath(getPathFromUri(activity, uri));
     }
 
-    private static String getPathFromUriUnderKITKAT(Activity activity, Uri uri){
+    public static String getPathFromUriUnderKITKAT(Activity activity, Uri uri){
         String[] proj = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
         Cursor actualimagecursor = activity.managedQuery(uri, proj,null, null, null);
@@ -318,7 +318,7 @@ public class FileUtils {
      * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private static String getPathFromUriOnKITKAT(final Context context, final Uri uri) {
+    public static String getPathFromUriOnKITKAT(final Context context, final Uri uri) {
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
