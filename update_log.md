@@ -1,5 +1,11 @@
 * 18/04/03
 
+    * BarUtils：修复6.0以上手机状态栏字体颜色转换问题
+    * 更新README.md
+    * 发布1.2.2版本
+
+* 18/04/03
+
     * BarUtils：优化setStatusBarColor方法
     * FileUtils：URI转文件路径方法公有化
     * SPUtils：修改SharedPreferences默认文件名为"utils_sp"
