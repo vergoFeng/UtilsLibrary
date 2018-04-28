@@ -11,14 +11,11 @@ import org.json.JSONObject;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Formatter;
+import java.util.concurrent.ExecutorService;
 
 /**
- * <pre>
- *     author: Blankj
- *     blog  : http://blankj.com
- *     time  : 2016/09/21
- *     desc  : Log相关工具类
- * </pre>
+ * Log相关工具类
+ * <p>Created by Fenghj on 2018/4/28.</p>
  */
 public final class JLog {
 
@@ -31,36 +28,46 @@ public final class JLog {
 
     @IntDef({V, D, I, W, E, A})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface TYPE {
+    public @interface TYPE {
     }
 
     private static final char[] T = new char[]{'V', 'D', 'I', 'W', 'E', 'A'};
 
     private static final int JSON = 0x10;
 
-    private static boolean sLogSwitch         = true;  // log总开关，默认开
-    private static String  sGlobalTag         = null;  // log标签
-    private static boolean sTagIsSpace        = true;  // log标签是否为空白
-    private static boolean sLogHeadSwitch     = true;  // log头部开关，默认开
-    private static boolean sLogBorderSwitch   = true;  // log边框开关，默认开
-    //    private static int     sConsoleFilter     = V;     // log控制台过滤器
-    private static int     sStackDeep         = 1;     // log栈深度
+    private static boolean mLogSwitch         = true;  // The switch of log.
+    private static String  mGlobalTag         = null;  // The global tag of log.
+    private static boolean mTagIsSpace        = true;  // The global tag is space.
+    private static boolean mLogHeadSwitch     = true;  // The head's switch of log.
+    private static boolean mLogBorderSwitch   = true;  // The border's switch of log.
+    private static boolean mSingleTagSwitch   = true;  // The single tag of log.
+    //        private static int     mConsoleFilter     = V;     // The console's filter of log.
+    private static int     mStackDeep         = 1;     // The stack's deep of log.
+    private static int     mStackOffset       = 0;     // The stack's offset of log.
 
-    private static final String LINE_SEP      = System.getProperty("line.separator");
-    private static final String TOP_BORDER    = "╔═══════════════════════════════════════════════════════════════════════════════════════════════════";
-    private static final String SPLIT_BORDER  = "╠───────────────────────────────────────────────────────────────────────────────────────────────────";
-    private static final String LEFT_BORDER   = "║ ";
-    private static final String BOTTOM_BORDER = "╚═══════════════════════════════════════════════════════════════════════════════════════════════════";
-    private static final int    MAX_LEN       = 4000;
-    private static final String NULL          = "null";
-    private static final String ARGS          = "args";
+    private static final String LINE_SEP       = System.getProperty("line.separator");
+    private static final String TOP_CORNER     = "┌";
+    private static final String MIDDLE_CORNER  = "├";
+    private static final String LEFT_BORDER    = "│ ";
+    private static final String BOTTOM_CORNER  = "└";
+    private static final String SIDE_DIVIDER   = "────────────────────────────────────────────────────────";
+    private static final String MIDDLE_DIVIDER = "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄";
+    private static final String TOP_BORDER     = TOP_CORNER + SIDE_DIVIDER + SIDE_DIVIDER;
+    private static final String MIDDLE_BORDER  = MIDDLE_CORNER + MIDDLE_DIVIDER + MIDDLE_DIVIDER;
+    private static final String BOTTOM_BORDER  = BOTTOM_CORNER + SIDE_DIVIDER + SIDE_DIVIDER;
+    private static final int    MAX_LEN        = 3000;
+    private static final String NOTHING        = "log nothing";
+    private static final String NULL           = "null";
+    private static final String ARGS           = "args";
+    private static final String PLACEHOLDER    = " ";
+    private static ExecutorService sExecutor;
 
     private JLog() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
     public static void v(final Object... contents) {
-        log(V, sGlobalTag, contents);
+        log(V, mGlobalTag, contents);
     }
 
     public static void vTag(final String tag, final Object... contents) {
@@ -68,7 +75,7 @@ public final class JLog {
     }
 
     public static void d(final Object... contents) {
-        log(D, sGlobalTag, contents);
+        log(D, mGlobalTag, contents);
     }
 
     public static void dTag(final String tag, final Object... contents) {
@@ -76,7 +83,7 @@ public final class JLog {
     }
 
     public static void i(final Object... contents) {
-        log(I, sGlobalTag, contents);
+        log(I, mGlobalTag, contents);
     }
 
     public static void iTag(final String tag, final Object... contents) {
@@ -84,7 +91,7 @@ public final class JLog {
     }
 
     public static void w(final Object... contents) {
-        log(W, sGlobalTag, contents);
+        log(W, mGlobalTag, contents);
     }
 
     public static void wTag(final String tag, final Object... contents) {
@@ -92,7 +99,7 @@ public final class JLog {
     }
 
     public static void e(final Object... contents) {
-        log(E, sGlobalTag, contents);
+        log(E, mGlobalTag, contents);
     }
 
     public static void eTag(final String tag, final Object... contents) {
@@ -100,7 +107,7 @@ public final class JLog {
     }
 
     public static void a(final Object... contents) {
-        log(A, sGlobalTag, contents);
+        log(A, mGlobalTag, contents);
     }
 
     public static void aTag(final String tag, final Object... contents) {
@@ -108,11 +115,11 @@ public final class JLog {
     }
 
     public static void json(final String content) {
-        log(JSON | D, sGlobalTag, content);
+        log(JSON | D, mGlobalTag, content);
     }
 
     public static void json(@TYPE final int type, final String content) {
-        log(JSON | type, sGlobalTag, content);
+        log(JSON | type, mGlobalTag, content);
     }
 
     public static void json(final String tag, final String content) {
@@ -123,62 +130,66 @@ public final class JLog {
         log(JSON | type, tag, content);
     }
 
-    private static void log(final int type, final String tag, final Object... contents) {
-        if (!sLogSwitch) return;
+    public static void log(final int type, final String tag, final Object... contents) {
+        if (!mLogSwitch) return;
         int type_low = type & 0x0f, type_high = type & 0xf0;
+//        if (type_low < CONFIG.mConsoleFilter) return;
         final TagHead tagHead = processTagAndHead(tag);
         String body = processBody(type_high, contents);
         print2Console(type_low, tagHead.tag, tagHead.consoleHead, body);
     }
 
     private static TagHead processTagAndHead(String tag) {
-        if (!sTagIsSpace && !sLogHeadSwitch) {
-            tag = sGlobalTag;
+        if (!mTagIsSpace && !mLogHeadSwitch) {
+            tag = mGlobalTag;
         } else {
             final StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-            StackTraceElement targetElement = stackTrace[3];
-            String fileName = targetElement.getFileName();
-            String className;
-            if (fileName == null) {// 混淆可能会导致获取为空 加-keepattributes SourceFile,LineNumberTable
-                className = targetElement.getClassName();
-                String[] classNameInfo = className.split("\\.");
-                if (classNameInfo.length > 0) {
-                    className = classNameInfo[classNameInfo.length - 1];
+            final int stackIndex = 3 + mStackOffset;
+            if (stackIndex >= stackTrace.length) {
+                StackTraceElement targetElement = stackTrace[3];
+                final String fileName = getFileName(targetElement);
+                if (mTagIsSpace && isSpace(tag)) {
+                    int index = fileName.indexOf('.');// Use proguard may not find '.'.
+                    tag = index == -1 ? fileName : fileName.substring(0, index);
                 }
-                int index = className.indexOf('$');
-                if (index != -1) {
-                    className = className.substring(0, index);
-                }
-                fileName = className + ".java";
-            } else {
-                int index = fileName.indexOf('.');// 混淆可能导致文件名被改变从而找不到"."
-                className = index == -1 ? fileName : fileName.substring(0, index);
+                return new TagHead(tag, null, ": ");
             }
-            if (sTagIsSpace) tag = isSpace(tag) ? className : tag;
-            if (sLogHeadSwitch) {
+            StackTraceElement targetElement = stackTrace[stackIndex];
+            final String fileName = getFileName(targetElement);
+            if (mTagIsSpace && isSpace(tag)) {
+                int index = fileName.indexOf('.');// Use proguard may not find '.'.
+                tag = index == -1 ? fileName : fileName.substring(0, index);
+            }
+            if (mLogHeadSwitch) {
                 String tName = Thread.currentThread().getName();
                 final String head = new Formatter()
-                        .format("%s, %s(%s:%d)",
+                        .format("%s, %s.%s(%s:%d)",
                                 tName,
+                                targetElement.getClassName(),
                                 targetElement.getMethodName(),
                                 fileName,
                                 targetElement.getLineNumber())
                         .toString();
                 final String fileHead = " [" + head + "]: ";
-                if (sStackDeep <= 1) {
+                if (mStackDeep <= 1) {
                     return new TagHead(tag, new String[]{head}, fileHead);
                 } else {
-                    final String[] consoleHead = new String[Math.min(sStackDeep, stackTrace.length - 3)];
+                    final String[] consoleHead =
+                            new String[Math.min(
+                                    mStackDeep,
+                                    stackTrace.length - stackIndex
+                            )];
                     consoleHead[0] = head;
                     int spaceLen = tName.length() + 2;
                     String space = new Formatter().format("%" + spaceLen + "s", "").toString();
                     for (int i = 1, len = consoleHead.length; i < len; ++i) {
-                        targetElement = stackTrace[i + 3];
+                        targetElement = stackTrace[i + stackIndex];
                         consoleHead[i] = new Formatter()
-                                .format("%s%s(%s:%d)",
+                                .format("%s%s.%s(%s:%d)",
                                         space,
+                                        targetElement.getClassName(),
                                         targetElement.getMethodName(),
-                                        targetElement.getFileName(),
+                                        getFileName(targetElement),
                                         targetElement.getLineNumber())
                                 .toString();
                     }
@@ -187,6 +198,23 @@ public final class JLog {
             }
         }
         return new TagHead(tag, null, ": ");
+    }
+
+    private static String getFileName(final StackTraceElement targetElement) {
+        String fileName = targetElement.getFileName();
+        if (fileName != null) return fileName;
+        // If name of file is null, should add
+        // "-keepattributes SourceFile,LineNumberTable" in proguard file.
+        String className = targetElement.getClassName();
+        String[] classNameInfo = className.split("\\.");
+        if (classNameInfo.length > 0) {
+            className = classNameInfo[classNameInfo.length - 1];
+        }
+        int index = className.indexOf('$');
+        if (index != -1) {
+            className = className.substring(0, index);
+        }
+        return className + ".java";
     }
 
     private static String processBody(final int type, final Object... contents) {
@@ -213,7 +241,7 @@ public final class JLog {
                 body = sb.toString();
             }
         }
-        return body;
+        return body.length() == 0 ? NOTHING : body;
     }
 
     private static String formatJson(String json) {
@@ -229,15 +257,44 @@ public final class JLog {
         return json;
     }
 
-    private static void print2Console(final int type, final String tag, final String[] head, final String msg) {
-        printBorder(type, tag, true);
-        printHead(type, tag, head);
-        printMsg(type, tag, msg);
-        printBorder(type, tag, false);
+    private static void print2Console(final int type,
+                                      final String tag,
+                                      final String[] head,
+                                      final String msg) {
+        if (mSingleTagSwitch) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(PLACEHOLDER).append(LINE_SEP);
+            if (mLogBorderSwitch) {
+                sb.append(TOP_BORDER).append(LINE_SEP);
+                if (head != null) {
+                    for (String aHead : head) {
+                        sb.append(LEFT_BORDER).append(aHead).append(LINE_SEP);
+                    }
+                    sb.append(MIDDLE_BORDER).append(LINE_SEP);
+                }
+                for (String line : msg.split(LINE_SEP)) {
+                    sb.append(LEFT_BORDER).append(line).append(LINE_SEP);
+                }
+                sb.append(BOTTOM_BORDER);
+            } else {
+                if (head != null) {
+                    for (String aHead : head) {
+                        sb.append(aHead).append(LINE_SEP);
+                    }
+                }
+                sb.append(msg);
+            }
+            printMsgSingleTag(type, tag, sb.toString());
+        } else {
+            printBorder(type, tag, true);
+            printHead(type, tag, head);
+            printMsg(type, tag, msg);
+            printBorder(type, tag, false);
+        }
     }
 
     private static void printBorder(final int type, final String tag, boolean isTop) {
-        if (sLogBorderSwitch) {
+        if (mLogBorderSwitch) {
             Log.println(type, tag, isTop ? TOP_BORDER : BOTTOM_BORDER);
         }
     }
@@ -245,9 +302,9 @@ public final class JLog {
     private static void printHead(final int type, final String tag, final String[] head) {
         if (head != null) {
             for (String aHead : head) {
-                Log.println(type, tag, sLogBorderSwitch ? LEFT_BORDER + aHead : aHead);
+                Log.println(type, tag, mLogBorderSwitch ? LEFT_BORDER + aHead : aHead);
             }
-            if (sLogBorderSwitch) Log.println(type, tag, SPLIT_BORDER);
+            if (mLogBorderSwitch) Log.println(type, tag, MIDDLE_BORDER);
         }
     }
 
@@ -268,8 +325,40 @@ public final class JLog {
         }
     }
 
+    private static void printMsgSingleTag(final int type, final String tag, final String msg) {
+        int len = msg.length();
+        int countOfSub = len / MAX_LEN;
+        if (countOfSub > 0) {
+            if (mLogBorderSwitch) {
+                Log.println(type, tag, msg.substring(0, MAX_LEN) + LINE_SEP + BOTTOM_BORDER);
+                int index = MAX_LEN;
+                for (int i = 1; i < countOfSub; i++) {
+                    Log.println(type, tag, PLACEHOLDER + LINE_SEP + TOP_BORDER + LINE_SEP
+                            + LEFT_BORDER + msg.substring(index, index + MAX_LEN)
+                            + LINE_SEP + BOTTOM_BORDER);
+                    index += MAX_LEN;
+                }
+                if (index != len) {
+                    Log.println(type, tag, PLACEHOLDER + LINE_SEP + TOP_BORDER + LINE_SEP
+                            + LEFT_BORDER + msg.substring(index, len));
+                }
+            } else {
+                int index = 0;
+                for (int i = 0; i < countOfSub; i++) {
+                    Log.println(type, tag, msg.substring(index, index + MAX_LEN));
+                    index += MAX_LEN;
+                }
+                if (index != len) {
+                    Log.println(type, tag, msg.substring(index, len));
+                }
+            }
+        } else {
+            Log.println(type, tag, msg);
+        }
+    }
+
     private static void printSubMsg(final int type, final String tag, final String msg) {
-        if (!sLogBorderSwitch) {
+        if (!mLogBorderSwitch) {
             Log.println(type, tag, msg);
             return;
         }
@@ -292,47 +381,69 @@ public final class JLog {
 
     public static class Builder {
 
-        public Builder setLogSwitch(boolean logSwitch) {
-            sLogSwitch = logSwitch;
+        public Builder setLogSwitch(final boolean logSwitch) {
+            mLogSwitch = logSwitch;
             return this;
         }
 
         public Builder setGlobalTag(final String tag) {
             if (isSpace(tag)) {
-                sGlobalTag = "";
-                sTagIsSpace = true;
+                mGlobalTag = "";
+                mTagIsSpace = true;
             } else {
-                sGlobalTag = tag;
-                sTagIsSpace = false;
+                mGlobalTag = tag;
+                mTagIsSpace = false;
             }
             return this;
         }
 
-        public Builder setLogHeadSwitch(boolean logHeadSwitch) {
-            sLogHeadSwitch = logHeadSwitch;
+        public Builder setLogHeadSwitch(final boolean logHeadSwitch) {
+            mLogHeadSwitch = logHeadSwitch;
             return this;
         }
 
-        public Builder setBorderSwitch(boolean borderSwitch) {
-            sLogBorderSwitch = borderSwitch;
+        public Builder setBorderSwitch(final boolean borderSwitch) {
+            mLogBorderSwitch = borderSwitch;
+            return this;
+        }
+
+        public Builder setSingleTagSwitch(final boolean singleTagSwitch) {
+            mSingleTagSwitch = singleTagSwitch;
             return this;
         }
 
 //        public Builder setConsoleFilter(@TYPE final int consoleFilter) {
-//            sConsoleFilter = consoleFilter;
+//            mConsoleFilter = consoleFilter;
 //            return this;
 //        }
 
         public Builder setStackDeep(@IntRange(from = 1) final int stackDeep) {
-            sStackDeep = stackDeep;
+            mStackDeep = stackDeep;
             return this;
+        }
+
+        public Builder setStackOffset(@IntRange(from = 0) final int stackOffset) {
+            mStackOffset = stackOffset;
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return "switch: " + mLogSwitch
+                    + LINE_SEP + "tag: " + (mTagIsSpace ? "null" : mGlobalTag)
+                    + LINE_SEP + "head: " + mLogHeadSwitch
+                    + LINE_SEP + "border: " + mLogBorderSwitch
+                    + LINE_SEP + "singleTag: " + mSingleTagSwitch
+//                    + LINE_SEP + "consoleFilter: " + T[mConsoleFilter - V]
+                    + LINE_SEP + "stackDeep: " + mStackDeep
+                    + LINE_SEP + "mStackOffset: " + mStackOffset;
         }
     }
 
     private static class TagHead {
-        String tag;
+        String   tag;
         String[] consoleHead;
-        String fileHead;
+        String   fileHead;
 
         TagHead(String tag, String[] consoleHead, String fileHead) {
             this.tag = tag;

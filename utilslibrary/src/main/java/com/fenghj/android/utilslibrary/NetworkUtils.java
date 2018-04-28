@@ -169,6 +169,6 @@ public class NetworkUtils {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 }

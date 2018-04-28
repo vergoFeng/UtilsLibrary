@@ -37,6 +37,20 @@ public class TimeUtils {
     }
 
     /**
+     * 自定义时间转换格式
+     * @param t long型时间
+     * @param fromatStr 转换成类型，如果传空或者null，默认转换为 "yyyy年MM月dd日 HH:mm"
+     * @return 转换后时间串
+     */
+    public static String formatDate(long t, String fromatStr) {
+        if(fromatStr == null || "".equals(fromatStr)) {
+            fromatStr = "yyyy年MM月dd日 HH:mm";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(fromatStr);
+        return sdf.format(t);
+    }
+
+    /**
      * 获取友好型与当前时间的差
      *
      * @param time 毫秒时间戳

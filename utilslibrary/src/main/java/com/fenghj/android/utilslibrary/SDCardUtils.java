@@ -64,7 +64,7 @@ public class SDCardUtils {
      */
     public static String getCachePath(String type) {
         File cacheDirectory = getCacheDirectory(type);
-        return cacheDirectory != null ? cacheDirectory.getPath() : null;
+        return cacheDirectory != null ? cacheDirectory.getPath() : "";
     }
 
     /**
@@ -83,6 +83,6 @@ public class SDCardUtils {
      */
     public static String getStoragePath() {
         File rootDirectory = getStorageDirectory();
-        return rootDirectory != null ? rootDirectory.getPath() : null;
+        return rootDirectory != null ? rootDirectory.getPath() : "";
     }
 }

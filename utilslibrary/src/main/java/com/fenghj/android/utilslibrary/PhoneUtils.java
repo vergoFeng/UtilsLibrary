@@ -21,7 +21,7 @@ public class PhoneUtils {
     public static String getPhoneIMEI() {
         TelephonyManager tm = (TelephonyManager) UtilsInit.getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
-        return tm != null ? tm.getDeviceId() : null;
+        return tm != null ? tm.getDeviceId() : "";
     }
 
     /**
