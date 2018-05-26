@@ -61,12 +61,15 @@ public class BarUtils {
             setStatusBarModeByMIUI(activity, dark);
         } else if (OsUtils.isFlyme()) {
             setStatusBarModeByFlyme(activity, dark);
-        } else if (Build.VERSION.SDK_INT >= 23) {
-            setStatusBarMode(activity, dark);
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                setStatusBarMode(activity, dark);
+            }
+            if (statusBarColor == Color.WHITE && Build.VERSION.SDK_INT <= 22) {
+                statusBarColor = 0xffcccccc;
+            }
         }
-        if (statusBarColor == Color.WHITE && Build.VERSION.SDK_INT <= 22) {
-            statusBarColor = 0xffcccccc;
-        }
+
         if(viewGroup != null) {
             addStatusBarColor(viewGroup, statusBarColor);
         } else {
