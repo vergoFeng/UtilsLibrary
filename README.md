@@ -13,16 +13,16 @@ Step 1. 在build.gradle(Project:XXX)文件中增加JitPack仓库依赖。
     }
 Step 2. 在build.gradle(Module:XXX)文件中增加LUtilsLibrary依赖。
 
-    compile 'com.github.vergoFeng:UtilsLibrary:1.2.4'
+    compile 'com.github.vergoFeng:UtilsLibrary:1.3.0'
 
 ## How to use
 在使用utils下的相关工具，需要进行初始化，在Application中进行初始化：
 
-`UtilsInit.init(getApplicationContext());`
+`UtilsInit.init(this);`
 
 此类中提供了全局的Context，获取方法：
 
-`UtilsInit.getContext();`
+`UtilsInit.getApp();`
 
 ## API
 
@@ -40,7 +40,6 @@ launchApp         : 打开App
 setStatusBarColor       : 设置状态栏颜色
 hideStatusBar           : 隐藏状态栏
 getStatusBarHeight      : 获取状态栏高度
-setFullScreen           : 设置全屏
 setTranslucentStatus    : 设置状态栏透明(api大于19方可使用)
 setStatusBarMode        : 设置状态栏黑色字体图标(6.0以上版本)
 setStatusBarModeByFlyme : 设置状态栏图标为深色和魅族特定的文字风格
@@ -105,6 +104,7 @@ isFileExists       : 判断文件是否存在
 getDirLength       : 获取目录大小
 getFileLength      : 获取文件大小
 copyFile           : 复制文件
+copyDir            : 复制目录
 deleteDir          : 删除目录
 deleteFile         : 删除文件
 getPathFromUri     : 根据Uri获取文件路径
@@ -171,8 +171,9 @@ isFlyme : 判断手机系统是否是魅族Flyme
 * #### 手机相关：PhoneUtils
 
 ```
-getPhoneIMEI       : 获取手机IMEI码
-getSimOperatorCode : 获取Sim卡运营商名称code值
+getPhoneIMEI        : 获取手机IMEI码
+getSimOperatorByMnc : 获取Sim卡运营商名称
+getSimOperatorCode  : 获取Sim卡运营商名称code值
 ```
 
 * #### 屏幕相关：ScreenUtils
@@ -180,6 +181,12 @@ getSimOperatorCode : 获取Sim卡运营商名称code值
 ```
 getScreenWidth  : 获取屏幕的宽度
 getScreenHeight : 获取屏幕的高度
+isLandscape     : 判断是否是横屏
+isPortrait      : 判断是否是竖屏
+isTablet        : 判断是否为平板
+setFullScreen   : 设置全屏
+setLandscape    : 设置为横屏
+setPortrait     : 设置为竖屏
 ```
 
 * #### SD卡相关：SDCardUtils
@@ -243,11 +250,14 @@ dateToLong   : date类型转换为long类型
 * #### 吐司相关：ToastUtils
 
 ```
-showShort     : 显示短时吐司
-showShortSafe : 安全地显示短时吐司
-showLong      : 显示长时吐司
-showLongSafe  : 安全地显示长时吐司
-cancel        : 取消吐司显示
+showShort      : 显示短时吐司
+showLong       : 显示长时吐司
+setGravity     : 设置显示位置
+setMsgColor    : 设置字体颜色
+setMsgTextSize : 设置字体大小
+setBgColor     : 设置背景颜色
+setBgResource  : 设置背景资源
+cancel         : 取消吐司显示
 ```
 
 各个工具类具体使用方法，请阅读[帮助文档](CHM.md)

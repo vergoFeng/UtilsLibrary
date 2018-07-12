@@ -37,7 +37,7 @@ public class InputMethodUtils {
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
-        InputMethodManager imm = (InputMethodManager) UtilsInit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) UtilsInit.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm == null) return;
         imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
     }
@@ -58,7 +58,7 @@ public class InputMethodUtils {
      * @param view 视图
      */
     public static void hideSoftInput(View view) {
-        InputMethodManager imm = (InputMethodManager) UtilsInit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) UtilsInit.getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm == null) return;
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

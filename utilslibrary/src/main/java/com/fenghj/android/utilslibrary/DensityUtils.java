@@ -18,7 +18,7 @@ public final class DensityUtils {
      * @return px值
      */
     public static int dp2px(final float dpValue) {
-        final float scale = UtilsInit.getContext().getResources().getDisplayMetrics().density;
+        final float scale = UtilsInit.getApp().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
@@ -29,7 +29,7 @@ public final class DensityUtils {
      * @return dp值
      */
     public static int px2dp(final float pxValue) {
-        final float scale = UtilsInit.getContext().getResources().getDisplayMetrics().density;
+        final float scale = UtilsInit.getApp().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -40,7 +40,7 @@ public final class DensityUtils {
      * @return px值
      */
     public static int sp2px(final float spValue) {
-        final float fontScale = UtilsInit.getContext().getResources().getDisplayMetrics().scaledDensity;
+        final float fontScale = UtilsInit.getApp().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
 
@@ -51,7 +51,7 @@ public final class DensityUtils {
      * @return sp值
      */
     public static int px2sp(final float pxValue) {
-        final float fontScale = UtilsInit.getContext().getResources().getDisplayMetrics().scaledDensity;
+        final float fontScale = UtilsInit.getApp().getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
     }
 }

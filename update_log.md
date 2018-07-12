@@ -1,3 +1,14 @@
+* 18/07/12
+
+    * UtilsInit：修改没有调用init()初始化方法请情况下，无法使用相关工具类方法问题
+    * ToastUtils：重构，增加Toast的相关设置，例如位置，字体颜色大小等。
+    * FileUtils：新增copyDir，复制文件夹方法
+    * ScreenUtils：新增判断横竖屏、平板的方法；设置全屏、横竖屏方法。
+    * BarUtils：废弃 setFullScreen 设置全屏方法
+    * PhoneUtils：新增getSimOperatorByMnc，返回运营商名称
+    * 更新README.md
+    * 发布1.3.0版本
+
 * 18/05/26
 
     * BarUtils：修复5.0手机，魅族和小米手机状态栏在设置白色情况下变灰色问题

@@ -45,13 +45,13 @@ public class SDCardUtils {
         File appCacheDir = null;
         if (isSDCardEnable()) {
             if (TextUtils.isEmpty(type)) {
-                appCacheDir = UtilsInit.getContext().getExternalCacheDir();
+                appCacheDir = UtilsInit.getApp().getExternalCacheDir();
             } else {
-                appCacheDir = UtilsInit.getContext().getExternalFilesDir(type);
+                appCacheDir = UtilsInit.getApp().getExternalFilesDir(type);
             }
             if (appCacheDir == null) {// 有些手机需要通过自定义目录
                 appCacheDir = new File(Environment.getExternalStorageDirectory(),
-                        "Android/data/" + UtilsInit.getContext().getPackageName() + "/cache/" + type);
+                        "Android/data/" + UtilsInit.getApp().getPackageName() + "/cache/" + type);
             }
         }
         return appCacheDir;

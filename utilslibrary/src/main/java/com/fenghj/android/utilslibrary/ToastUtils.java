@@ -1,145 +1,320 @@
 package com.fenghj.android.utilslibrary;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
  * 吐司相关工具类
- * <p>Created by Fenghj on 2017/8/23.</p>
+ * <p>Created by Fenghj on 2018/5/31.</p>
  */
 
 public class ToastUtils {
-    private static final Handler sHandler = new Handler(Looper.getMainLooper());
-    private static Toast mToast;
+    private static final int     COLOR_DEFAULT  = 0xFEFFFFFF;
+    private static final Handler HANDLER        = new Handler(Looper.getMainLooper());
+
+    private static Toast sToast;
+    private static int sGravity      = -1;
+    private static int sXOffset      = -1;
+    private static int sYOffset      = -1;
+    private static int sBgColor      = COLOR_DEFAULT;
+    private static int sBgResource   = -1;
+    private static int sMsgColor     = COLOR_DEFAULT;
+    private static int sMsgTextSize  = -1;
+
     private ToastUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
+
     /**
-     * 安全地显示短时吐司
+     * Set the gravity.
      *
-     * @param text 文本
+     * @param gravity The gravity.
+     * @param xOffset X-axis offset, in pixel.
+     * @param yOffset Y-axis offset, in pixel.
      */
-    public static void showShortSafe(@NonNull final CharSequence text) {
-        sHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                show(text, Toast.LENGTH_SHORT);
-            }
-        });
-    }
-    /**
-     * 安全地显示短时吐司
-     *
-     * @param resId 资源Id
-     */
-    public static void showShortSafe(@StringRes final int resId) {
-        sHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                show(resId, Toast.LENGTH_SHORT);
-            }
-        });
+    public static void setGravity(final int gravity, final int xOffset, final int yOffset) {
+        sGravity = gravity;
+        sXOffset = xOffset;
+        sYOffset = yOffset;
     }
 
     /**
-     * 安全地显示长时吐司
+     * Set the color of background.
      *
-     * @param text 文本
+     * @param backgroundColor The color of background.
      */
-    public static void showLongSafe(@NonNull final CharSequence text) {
-        sHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                show(text, Toast.LENGTH_LONG);
-            }
-        });
+    public static void setBgColor(@ColorInt final int backgroundColor) {
+        sBgColor = backgroundColor;
     }
 
     /**
-     * 安全地显示长时吐司
+     * Set the resource of background.
      *
-     * @param resId 资源Id
+     * @param bgResource The resource of background.
      */
-    public static void showLongSafe(@StringRes final int resId) {
-        sHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                show(resId, Toast.LENGTH_LONG);
-            }
-        });
+    public static void setBgResource(@DrawableRes final int bgResource) {
+        sBgResource = bgResource;
     }
 
     /**
-     * 显示长时吐司
+     * Set the color of message.
      *
-     * @param text 文本
+     * @param msgColor The color of message.
      */
-    public static void showLong(@NonNull final CharSequence text) {
-        show(text, Toast.LENGTH_LONG);
+    public static void setMsgColor(@ColorInt final int msgColor) {
+        sMsgColor = msgColor;
     }
 
     /**
-     * 显示长时吐司
+     * Set the text size of message.
      *
-     * @param resId 资源Id
+     * @param textSize The text size of message.
      */
-    public static void showLong(@StringRes final int resId) {
-        show(resId, Toast.LENGTH_LONG);
+    public static void setMsgTextSize(final int textSize) {
+        sMsgTextSize = textSize;
     }
 
     /**
-     * 显示短时吐司
+     * Show the sToast for a short period of time.
      *
-     * @param text 文本
+     * @param text The text.
      */
     public static void showShort(@NonNull final CharSequence text) {
         show(text, Toast.LENGTH_SHORT);
     }
 
     /**
-     * 显示短时吐司
+     * Show the sToast for a short period of time.
      *
-     * @param resId 资源Id
+     * @param resId The resource id for text.
      */
     public static void showShort(@StringRes final int resId) {
         show(resId, Toast.LENGTH_SHORT);
     }
 
     /**
-     * 显示吐司
+     * Show the sToast for a short period of time.
      *
-     * @param resId    资源Id
-     * @param duration 显示时长
+     * @param resId The resource id for text.
+     * @param args  The args.
      */
-    private static void show(@StringRes final int resId, final int duration) {
-        show(UtilsInit.getContext().getResources().getText(resId).toString(), duration);
-    }
-
-    /**
-     * 显示吐司
-     *
-     * @param text     文本
-     * @param duration 显示时长
-     */
-    private static void show(final CharSequence text, final int duration) {
-        if (mToast == null) {
-            mToast = Toast.makeText(UtilsInit.getContext(), text, duration);
-        }else {
-            mToast.setText(text);
+    public static void showShort(@StringRes final int resId, final Object... args) {
+        if (args != null && args.length == 0) {
+            show(resId, Toast.LENGTH_SHORT);
+        } else {
+            show(resId, Toast.LENGTH_SHORT, args);
         }
-        mToast.show();
     }
 
     /**
-     * 取消吐司显示
+     * Show the sToast for a short period of time.
+     *
+     * @param format The format.
+     * @param args   The args.
+     */
+    public static void showShort(final String format, final Object... args) {
+        if (args != null && args.length == 0) {
+            show(format, Toast.LENGTH_SHORT);
+        } else {
+            show(format, Toast.LENGTH_SHORT, args);
+        }
+    }
+
+    /**
+     * Show the sToast for a long period of time.
+     *
+     * @param text The text.
+     */
+    public static void showLong(@NonNull final CharSequence text) {
+        show(text, Toast.LENGTH_LONG);
+    }
+
+    /**
+     * Show the sToast for a long period of time.
+     *
+     * @param resId The resource id for text.
+     */
+    public static void showLong(@StringRes final int resId) {
+        show(resId, Toast.LENGTH_LONG);
+    }
+
+    /**
+     * Show the sToast for a long period of time.
+     *
+     * @param resId The resource id for text.
+     * @param args  The args.
+     */
+    public static void showLong(@StringRes final int resId, final Object... args) {
+        if (args != null && args.length == 0) {
+            show(resId, Toast.LENGTH_SHORT);
+        } else {
+            show(resId, Toast.LENGTH_LONG, args);
+        }
+    }
+
+    /**
+     * Show the sToast for a long period of time.
+     *
+     * @param format The format.
+     * @param args   The args.
+     */
+    public static void showLong(final String format, final Object... args) {
+        if (args != null && args.length == 0) {
+            show(format, Toast.LENGTH_SHORT);
+        } else {
+            show(format, Toast.LENGTH_LONG, args);
+        }
+    }
+
+    /**
+     * Show custom sToast for a short period of time.
+     *
+     * @param layoutId ID for an XML layout resource to load.
+     */
+    public static View showCustomShort(@LayoutRes final int layoutId) {
+        final View view = getView(layoutId);
+        show(view, Toast.LENGTH_SHORT);
+        return view;
+    }
+
+    /**
+     * Show custom sToast for a long period of time.
+     *
+     * @param layoutId ID for an XML layout resource to load.
+     */
+    public static View showCustomLong(@LayoutRes final int layoutId) {
+        final View view = getView(layoutId);
+        show(view, Toast.LENGTH_LONG);
+        return view;
+    }
+
+    /**
+     * Cancel the sToast.
      */
     public static void cancel() {
-        if (mToast != null) {
-            mToast.cancel();
-            mToast = null;
+        if (sToast != null) {
+            sToast.cancel();
+            sToast = null;
         }
+    }
+
+    public static void reset() {
+        setMsgColor(COLOR_DEFAULT);
+        setBgColor(COLOR_DEFAULT);
+        setMsgTextSize(14);
+        setBgResource(-1);
+        setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, DensityUtils.dp2px(64));
+    }
+
+    private static void show(@StringRes final int resId, final int duration) {
+        show(UtilsInit.getApp().getResources().getText(resId).toString(), duration);
+    }
+
+    private static void show(@StringRes final int resId, final int duration, final Object... args) {
+        show(String.format(UtilsInit.getApp().getResources().getString(resId), args), duration);
+    }
+
+    private static void show(final String format, final int duration, final Object... args) {
+        show(String.format(format, args), duration);
+    }
+
+    private static void show(final CharSequence text, final int duration) {
+        HANDLER.post(new Runnable() {
+            @Override
+            public void run() {
+                cancel();
+                sToast = Toast.makeText(UtilsInit.getApp(), text, duration);
+                final TextView tvMessage = sToast.getView().findViewById(android.R.id.message);
+                if (sMsgColor != COLOR_DEFAULT) {
+                    tvMessage.setTextColor(sMsgColor);
+                }
+                if (sMsgTextSize != -1) {
+                    tvMessage.setTextSize(sMsgTextSize);
+                }
+                if (sGravity != -1 || sXOffset != -1 || sYOffset != -1) {
+                    sToast.setGravity(sGravity, sXOffset, sYOffset);
+                }
+                setBg(tvMessage);
+                sToast.show();
+            }
+        });
+    }
+
+    private static void show(final View view, final int duration) {
+        HANDLER.post(new Runnable() {
+            @Override
+            public void run() {
+                cancel();
+                sToast = new Toast(UtilsInit.getApp());
+                sToast.setView(view);
+                sToast.setDuration(duration);
+                if (sGravity != -1 || sXOffset != -1 || sYOffset != -1) {
+                    sToast.setGravity(sGravity, sXOffset, sYOffset);
+                }
+                setBg();
+                sToast.show();
+            }
+        });
+    }
+
+    private static void setBg() {
+        if (sBgResource != -1) {
+            final View toastView = sToast.getView();
+            toastView.setBackgroundResource(sBgResource);
+        } else if (sBgColor != COLOR_DEFAULT) {
+            final View toastView = sToast.getView();
+            Drawable background = toastView.getBackground();
+            if (background != null) {
+                background.setColorFilter(
+                        new PorterDuffColorFilter(sBgColor, PorterDuff.Mode.SRC_IN)
+                );
+            } else {
+                toastView.setBackground(new ColorDrawable(sBgColor));
+            }
+        }
+    }
+
+    private static void setBg(final TextView tvMsg) {
+        if (sBgResource != -1) {
+            final View toastView = sToast.getView();
+            toastView.setBackgroundResource(sBgResource);
+            tvMsg.setBackgroundColor(Color.TRANSPARENT);
+        } else if (sBgColor != COLOR_DEFAULT) {
+            final View toastView = sToast.getView();
+            Drawable tvBg = toastView.getBackground();
+            Drawable msgBg = tvMsg.getBackground();
+            if (tvBg != null && msgBg != null) {
+                tvBg.setColorFilter(new PorterDuffColorFilter(sBgColor, PorterDuff.Mode.SRC_IN));
+                tvMsg.setBackgroundColor(Color.TRANSPARENT);
+            } else if (tvBg != null) {
+                tvBg.setColorFilter(new PorterDuffColorFilter(sBgColor, PorterDuff.Mode.SRC_IN));
+            } else if (msgBg != null) {
+                msgBg.setColorFilter(new PorterDuffColorFilter(sBgColor, PorterDuff.Mode.SRC_IN));
+            } else {
+                toastView.setBackgroundColor(sBgColor);
+            }
+        }
+    }
+
+    private static View getView(@LayoutRes final int layoutId) {
+        LayoutInflater inflate =
+                (LayoutInflater) UtilsInit.getApp().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return inflate != null ? inflate.inflate(layoutId, null) : null;
     }
 }

@@ -76,18 +76,6 @@
   int getStatusBarHeight()
   ```
 
-* 设置全屏
-
-  ```
-  /**
-   * @param activity 当前Activity
-   */
-  setFullScreen(Activity activity)
-  ```
-
-  > 注意：一定要在setContentView之前调用，否则报错
-
-
 * 设置状态栏透明(api大于19方可使用)
 
   ```
@@ -371,6 +359,25 @@
   long getFileLength(final File file)
   ```
 
+* 复制目录
+
+  ```
+  /**
+   * @param srcDirPath  源目录路径
+   * @param destDirPath 目标目录路径
+   * @return
+   *     true : 复制成功
+   *     false: 复制失败
+   */
+  boolean copyDir(final String srcDirPath, final String destDirPath)
+  /**
+   * @param srcDir  源目录
+   * @param destDir 目标目录
+   */
+  boolean copyDir(final File srcDir, final File destDir)
+  ```
+
+
 * 复制文件
 
   ```
@@ -629,6 +636,15 @@
 
   ```
   /**
+   * @return 移动网络运营商名称
+   *         "中国电信"
+   *         "中国移动"
+   *         "中国联通"
+   *         "未知"
+   */
+  String getSimOperatorByMnc()
+
+  /**
    * @return 移动网络运营商名称转换成数字标识
    *         "1"：中国电信
    *         "2"：中国移动
@@ -648,31 +664,85 @@
 
   `int getScreenHeight()`
 
+* 设置全屏
+
+  ```
+  /**
+   * @param activity 当前Activity
+   */
+  setFullScreen(Activity activity)
+  ```
+
+  > 注意：一定要在setContentView之前调用，否则报错
+
+* 设置为横竖屏
+
+  ```
+  /**
+   * 设置为横屏
+   */
+  void setLandscape(Activity activity)
+  /**
+   * 设置为竖屏
+   */
+  void setPortrait(Activity activity)
+  ```
+
+* 判断是否横竖屏
+
+  ```
+  /**
+   * 判断是否是横屏
+   */
+  boolean isLandscape()
+  /**
+   * 判断是否是竖屏
+   */
+  boolean isPortrait()
+  ```
+
+* 判断是否为平板
+
+  ```
+  /**
+   * 判断是否为平板
+   */
+  boolean isTablet()
+  ```
+
 ### 16. SDCardUtils（SD卡相关）
 
 * 判断SD卡是否可用：
 
-        boolean isSDCardEnable()
+    ```
+    boolean isSDCardEnable()
+    ```
 
 * 获取应用专属缓存目录
 
-        File getCacheDirectory(Environment.DIRECTORY_DOWNLOADS);
-        String getCachePath(Environment.DIRECTORY_DOWNLOADS);
+    ```
+    File getCacheDirectory(Environment.DIRECTORY_DOWNLOADS);
+    String getCachePath(Environment.DIRECTORY_DOWNLOADS);
+    ```
 
     方法参数：
 
-        Environment.DIRECTORY_MUSIC
-        Environment.DIRECTORY_PODCASTS
-        Environment.DIRECTORY_RINGTONES
-        Environment.DIRECTORY_ALARMS
-        Environment.DIRECTORY_NOTIFICATIONS
-        Environment.DIRECTORY_PICTURES
-        Environment.DIRECTORY_MOVIES
+    ```
+    Environment.DIRECTORY_MUSIC
+    Environment.DIRECTORY_PODCASTS
+    Environment.DIRECTORY_RINGTONES
+    Environment.DIRECTORY_ALARMS
+    Environment.DIRECTORY_NOTIFICATIONS
+    Environment.DIRECTORY_PICTURES
+    Environment.DIRECTORY_MOVIES
+    ```
 
 * 获取SD卡的根目录
 
-        File getStorageDirectory();
-        String getStoragePath();
+    ```
+    File getStorageDirectory();
+    String getStoragePath();
+    ```
 
 ### 17. SPUtils（SharedPreferences相关）
 
@@ -744,7 +814,9 @@
 
 * 清除所有数据
 
-	    SPUtils.init().clear();
+    ```
+    SPUtils.init().clear();
+    ```
 
 ### 18. StringUtils（字符串相关）
 
@@ -870,18 +942,32 @@
   showLong(@StringRes final int resId)
   ```
 
-* 安全地显示短时吐司
+* 设置显示位置
 
   ```
-  showShortSafe(@NonNull final CharSequence text)
-  showShortSafe(@StringRes final int resId)
+  /**
+   * @param gravity The gravity.
+   * @param xOffset X轴偏移量（px）.
+   * @param yOffset Y轴偏移量（px）.
+   */
+  setGravity(final int gravity, final int xOffset, final int yOffset)
   ```
 
-* 安全地显示长时吐司
+* 设置消息字体颜色、大小
 
   ```
-  showLongSafe(@NonNull final CharSequence text)
-  showLongSafe(@StringRes final int resId)
+  //设置字体颜色
+  setMsgColor(int msgColor)
+  //设置字体大小
+  setMsgTextSize(int textSize)
   ```
 
+* 设置背景颜色、资源
+
+  ```
+  //设置背景颜色
+  setBgColor(@ColorInt int backgroundColor)
+  //设置背景资源
+  setBgResource(@DrawableRes int bgResource)
+  ```
   ​

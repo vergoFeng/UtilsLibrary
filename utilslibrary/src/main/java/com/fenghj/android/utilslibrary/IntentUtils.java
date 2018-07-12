@@ -84,19 +84,19 @@ public class IntentUtils {
      */
     public static Intent getCameraIntent(File file) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(UtilsInit.getContext().getPackageManager()) != null) {
+        if (intent.resolveActivity(UtilsInit.getApp().getPackageManager()) != null) {
             if (Build.VERSION.SDK_INT < 24) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
             } else {
                 //兼容7.0调用相机
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-                Uri uri = UtilsInit.getContext().getContentResolver()
+                Uri uri = UtilsInit.getApp().getContentResolver()
                         .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             }
         } else {
-            Toast.makeText(UtilsInit.getContext(), "没有系统相机", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UtilsInit.getApp(), "没有系统相机", Toast.LENGTH_SHORT).show();
         }
         return intent;
     }

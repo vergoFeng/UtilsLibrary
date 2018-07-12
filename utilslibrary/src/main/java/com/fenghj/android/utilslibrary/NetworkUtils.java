@@ -36,7 +36,7 @@ public class NetworkUtils {
      * @return NetworkInfo
      */
     private static NetworkInfo getActiveNetworkInfo() {
-        return ((ConnectivityManager) UtilsInit.getContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        return ((ConnectivityManager) UtilsInit.getApp().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     }
     /**
      * 判断网络是否连接
@@ -56,7 +56,7 @@ public class NetworkUtils {
      * @return {@code true}: 连接<br>{@code false}: 未连接
      */
     public static boolean isWifiConnected() {
-        ConnectivityManager cm = (ConnectivityManager) UtilsInit.getContext()
+        ConnectivityManager cm = (ConnectivityManager) UtilsInit.getApp()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm != null && cm.getActiveNetworkInfo() != null
                 && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
@@ -77,7 +77,7 @@ public class NetworkUtils {
      * </ul>
      */
     public static String getNetworkType() {
-        ConnectivityManager cm = (ConnectivityManager) UtilsInit.getContext()
+        ConnectivityManager cm = (ConnectivityManager) UtilsInit.getApp()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         if(info != null) {

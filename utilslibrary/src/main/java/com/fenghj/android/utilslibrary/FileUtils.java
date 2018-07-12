@@ -149,6 +149,58 @@ public class FileUtils {
     }
 
     /**
+     * Copy the directory.
+     *
+     * @param srcDirPath  The source directory.
+     * @param destDirPath The destination directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean copyDir(final String srcDirPath, final String destDirPath) {
+        return copyDir(getFileByPath(srcDirPath), getFileByPath(destDirPath));
+    }
+
+    /**
+     * Copy the directory.
+     *
+     * @param srcDir   The source directory.
+     * @param destDir  The destination directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean copyDir(final File srcDir, final File destDir) {
+        return copyOrMoveDir(srcDir, destDir);
+    }
+
+    private static boolean copyOrMoveDir(final File srcDir,
+                                         final File destDir) {
+        if (srcDir == null || destDir == null) return false;
+        // destDir's path locate in srcDir's path then return false
+        String srcPath = srcDir.getPath() + File.separator;
+        String destPath = destDir.getPath() + File.separator;
+        if (destPath.contains(srcPath)) return false;
+        if (!srcDir.exists() || !srcDir.isDirectory()) return false;
+//        if (destDir.exists()) {
+//            if (listener == null || listener.onReplace()) {// require delete the old directory
+//                if (!deleteAllInDir(destDir)) {// unsuccessfully delete then return false
+//                    return false;
+//                }
+//            } else {
+//                return true;
+//            }
+//        }
+        if (!createOrExistsDir(destDir)) return false;
+        File[] files = srcDir.listFiles();
+        for (File file : files) {
+            File oneDestFile = new File(destPath + file.getName());
+            if (file.isFile()) {
+                if (!copyOrMoveFile(file, oneDestFile)) return false;
+            } else if (file.isDirectory()) {
+                if (!copyOrMoveDir(file, oneDestFile)) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * 复制文件
      *
      * @param srcFilePath  源文件路径
@@ -390,7 +442,7 @@ public class FileUtils {
      * @return The value of the _data column, which is typically a file path.
      */
     private static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+                                        String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -439,8 +491,8 @@ public class FileUtils {
 
     /**
      * 利用反射获取外置sd卡路径
-     * @param mContext
-     * @return
+     * @param mContext 当前上下文
+     * @return sd卡路径
      */
     private static String getExtendedMemoryPath(Context mContext) {
         StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);

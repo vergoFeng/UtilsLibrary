@@ -19,7 +19,7 @@ public class AppUtils {
      * @return App包名
      */
     public static String getAppPackageName() {
-        return UtilsInit.getContext().getPackageName();
+        return UtilsInit.getApp().getPackageName();
     }
 
     /**
@@ -41,7 +41,7 @@ public class AppUtils {
         if (TextUtils.isEmpty(packageName)) return;
         Intent intent = getLaunchAppIntent(packageName);
         if(intent == null) return;
-        UtilsInit.getContext().startActivity(intent);
+        UtilsInit.getApp().startActivity(intent);
     }
 
     /**
@@ -51,6 +51,6 @@ public class AppUtils {
      * @return intent
      */
     public static Intent getLaunchAppIntent(String packageName) {
-        return UtilsInit.getContext().getPackageManager().getLaunchIntentForPackage(packageName);
+        return UtilsInit.getApp().getPackageManager().getLaunchIntentForPackage(packageName);
     }
 }

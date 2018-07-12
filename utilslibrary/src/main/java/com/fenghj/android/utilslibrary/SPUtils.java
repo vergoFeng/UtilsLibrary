@@ -37,7 +37,7 @@ public class SPUtils {
 
     @SuppressLint("CommitPrefEdits")
     private SPUtils(String spName) {
-        sSharedPreferences = UtilsInit.getContext().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        sSharedPreferences = UtilsInit.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
         sEditor = sSharedPreferences.edit();
         mCurSPName = spName;
     }
@@ -59,7 +59,7 @@ public class SPUtils {
     }
 
     public SPUtils put(@StringRes int key, Object value) {
-        return put(UtilsInit.getContext().getString(key), value);
+        return put(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils put(String key, Object value) {
@@ -82,7 +82,7 @@ public class SPUtils {
     }
 
     public Object get(@StringRes int key, Object defaultObject) {
-        return get(UtilsInit.getContext().getString(key), defaultObject);
+        return get(UtilsInit.getApp().getString(key), defaultObject);
     }
 
     public Object get(String key, Object defaultObject) {
@@ -107,15 +107,15 @@ public class SPUtils {
     }
 
     public SPUtils putInt(@StringRes int key, int value) {
-        return putInt(UtilsInit.getContext().getString(key), value);
+        return putInt(UtilsInit.getApp().getString(key), value);
     }
 
     public int getInt(@StringRes int key) {
-        return getInt(UtilsInit.getContext().getString(key));
+        return getInt(UtilsInit.getApp().getString(key));
     }
 
     public int getInt(@StringRes int key, int defValue) {
-        return getInt(UtilsInit.getContext().getString(key), defValue);
+        return getInt(UtilsInit.getApp().getString(key), defValue);
     }
 
     public int getInt(String key) {
@@ -128,7 +128,7 @@ public class SPUtils {
     }
 
     public SPUtils putFloat(@StringRes int key, float value) {
-        return putFloat(UtilsInit.getContext().getString(key), value);
+        return putFloat(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils putFloat(String key, float value) {
@@ -146,15 +146,15 @@ public class SPUtils {
     }
 
     public float getFloat(@StringRes int key) {
-        return getFloat(UtilsInit.getContext().getString(key));
+        return getFloat(UtilsInit.getApp().getString(key));
     }
 
     public float getFloat(@StringRes int key, float defValue) {
-        return getFloat(UtilsInit.getContext().getString(key), defValue);
+        return getFloat(UtilsInit.getApp().getString(key), defValue);
     }
 
     public SPUtils putLong(@StringRes int key, long value) {
-        return putLong(UtilsInit.getContext().getString(key), value);
+        return putLong(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils putLong(String key, long value) {
@@ -172,15 +172,15 @@ public class SPUtils {
     }
 
     public long getLong(@StringRes int key) {
-        return getLong(UtilsInit.getContext().getString(key));
+        return getLong(UtilsInit.getApp().getString(key));
     }
 
     public long getLong(@StringRes int key, long defValue) {
-        return getLong(UtilsInit.getContext().getString(key), defValue);
+        return getLong(UtilsInit.getApp().getString(key), defValue);
     }
 
     public SPUtils putString(@StringRes int key, String value) {
-        return putString(UtilsInit.getContext().getString(key), value);
+        return putString(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils putString(String key, String value) {
@@ -198,15 +198,15 @@ public class SPUtils {
     }
 
     public String getString(@StringRes int key) {
-        return getString(UtilsInit.getContext().getString(key), DEFAULT_STRING);
+        return getString(UtilsInit.getApp().getString(key), DEFAULT_STRING);
     }
 
     public String getString(@StringRes int key, String defValue) {
-        return getString(UtilsInit.getContext().getString(key), defValue);
+        return getString(UtilsInit.getApp().getString(key), defValue);
     }
 
     public SPUtils putBoolean(@StringRes int key, boolean value) {
-        return putBoolean(UtilsInit.getContext().getString(key), value);
+        return putBoolean(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils putBoolean(String key, boolean value) {
@@ -224,15 +224,15 @@ public class SPUtils {
     }
 
     public boolean getBoolean(@StringRes int key) {
-        return getBoolean(UtilsInit.getContext().getString(key));
+        return getBoolean(UtilsInit.getApp().getString(key));
     }
 
     public boolean getBoolean(@StringRes int key, boolean defValue) {
-        return getBoolean(UtilsInit.getContext().getString(key), defValue);
+        return getBoolean(UtilsInit.getApp().getString(key), defValue);
     }
 
     public SPUtils putStringSet(@StringRes int key, Set<String> value) {
-        return putStringSet(UtilsInit.getContext().getString(key), value);
+        return putStringSet(UtilsInit.getApp().getString(key), value);
     }
 
     public SPUtils putStringSet(String key, Set<String> value) {
@@ -251,11 +251,11 @@ public class SPUtils {
     }
 
     public Set<String> getStringSet(@StringRes int key) {
-        return getStringSet(UtilsInit.getContext().getString(key));
+        return getStringSet(UtilsInit.getApp().getString(key));
     }
 
     public Set<String> getStringSet(@StringRes int key, Set<String> defValue) {
-        return getStringSet(UtilsInit.getContext().getString(key), defValue);
+        return getStringSet(UtilsInit.getApp().getString(key), defValue);
     }
 
     public boolean contains(String key) {
@@ -263,7 +263,7 @@ public class SPUtils {
     }
 
     public boolean contains(@StringRes int key) {
-        return contains(UtilsInit.getContext().getString(key));
+        return contains(UtilsInit.getApp().getString(key));
     }
 
     public Map<String, ?> getAll() {
@@ -271,7 +271,7 @@ public class SPUtils {
     }
 
     public SPUtils remove(@StringRes int key) {
-        return remove(UtilsInit.getContext().getString(key));
+        return remove(UtilsInit.getApp().getString(key));
     }
 
     public SPUtils remove(String key) {

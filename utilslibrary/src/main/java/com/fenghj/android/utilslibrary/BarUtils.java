@@ -52,20 +52,27 @@ public class BarUtils {
     public static void setStatusBarColor(@NonNull final Activity activity, ViewGroup viewGroup, @ColorInt final int color, boolean dark) {
         if (Build.VERSION.SDK_INT < 19) return;
         int statusBarColor = color;
-
         //设置状态栏透明
         setTranslucentStatus(activity);
+        //隐藏自定义的状态栏view
+        hideColorView(activity);
+        //如果传入的viewGroup为null，直接为activity 增加 MarginTop 为状态栏高度
         if(viewGroup == null) addMarginTopEqualStatusBarHeight(activity);
 
         if (OsUtils.isMIUI()) {
+            //小米手机设置状态栏图标文字颜色为深色还是白色
             setStatusBarModeByMIUI(activity, dark);
         } else if (OsUtils.isFlyme()) {
+            //魅族手机设置状态栏图标文字颜色为深色还是白色
             setStatusBarModeByFlyme(activity, dark);
         } else {
             if (Build.VERSION.SDK_INT >= 23) {
+                //其余手机且系统版本高于6.0，设置状态栏图标文字颜色为深色还是白色
                 setStatusBarMode(activity, dark);
             }
             if (statusBarColor == Color.WHITE && Build.VERSION.SDK_INT <= 22) {
+                //手机系统小于6.0的手机时，如果设置状态栏为白色，那么状态栏上的按钮和文字也是白色，影响观看
+                //这里强制转换为 #CCCCCC 灰色系
                 statusBarColor = 0xffcccccc;
             }
         }
@@ -191,7 +198,7 @@ public class BarUtils {
      * @return 状态栏高度px
      */
     public static int getStatusBarHeight() {
-        Resources resources = UtilsInit.getContext().getResources();
+        Resources resources = UtilsInit.getApp().getResources();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         return resources.getDimensionPixelSize(resourceId);
     }
@@ -201,6 +208,7 @@ public class BarUtils {
      * <p>PS：一定要在setContentView之前调用，否则报错</p>
      * @param activity 当前Activity
      */
+    @Deprecated
     public static void setFullScreen(Activity activity) {
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
